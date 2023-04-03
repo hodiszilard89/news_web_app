@@ -35,11 +35,11 @@ export function changeTodoFlag(id, onDeleting = false, done = false) {
 export function addTodoOnServer(item) {
   console.log(item);
   return (dispatch) => {
-    console.log("már majdnem");
-    setTimeout(() => {
-      console.log("namost");
-      dispatch(addTodo(item.value));
-    }, 1000);
+    // console.log("már majdnem");
+    // setTimeout(() => {
+    //   console.log("namost");
+    //   dispatch(addTodo(item.value));
+    // }, 1000);
   };
 }
 export function delTodoOnServer(id) {
