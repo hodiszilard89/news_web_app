@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Navigate, Redirect, NavLink, Navigator } from "react-router-dom";
 
-import { Field, reduxForm } from "redux-form/immutable";
+import { Field, reduxForm } from "immutable";
 import RenderField from "./RenderField";
 
 function TodoDetail({ item }) {

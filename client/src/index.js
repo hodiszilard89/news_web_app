@@ -15,70 +15,7 @@ import TodoDetailContainer from "./containers/TodoDetailContainer";
 import EditTodoContainer from "./containers/EditTodoContainer";
 import NewTodoContainer from "./containers/NewTodoContainer";
 import TodoEdit from "./components/TodoEdit";
-
-//var colors = ["red", "blue", "yellow"];
-
-// function reducer(
-//   state = fromJS({
-//     todos: {
-//       1: { id: 1, value: "Psita", color: "blue" },
-//     },
-//     search: "",
-//     color: "",
-//   }),
-//   action
-// ) {
-//   if (action.type === "ADD_TODO") {
-//     let id = Math.random();
-//     //console.log(action.newTodo);
-//     return state.setIn(
-//       ["todos", "" + id],
-//       fromJS({
-//         value: action.newTodo,
-//         id,
-//         color: colors[Math.floor(Math.random() * colors.length)],
-//       })
-//     );
-//   }
-//   /////////////////////////////////////////
-//   // return state.set(
-//   //   "todos",
-//   //   state
-//   //     .get("todos")
-//   //     .push(fromJS({ id: Math.random(), value: action.newTodo }))
-//   // );
-
-//   ///////////////////////////////////////////////////////////////
-//   // let newTodos = JSON.parse(JSON.stringify(state.get("todos")));
-//   // newTodos.push({
-//   //   id: Math.random(),
-//   //   value: action.newTodo,
-//   // });
-//   // return {
-//   //   todos: newTodos,
-//   //   search: state.search,
-
-//   if (action.type === "SEARCH_CHANGE") {
-//     //let newState = JSON.parse(JSON.stringify(state.todos));
-//     //console.log(action.newSearchValue);
-//     return state.set("search", "" + action.newSearchValue);
-//   }
-//   if (action.type === "DEL_TODO") {
-//     return state.deleteIn(["todos", "" + action.id]);
-//     ///////////////////////////////////////////
-//     // return state.set(
-//     //   "todos",
-//     //   state.get("todos").filter((e) => e.get("id") !== action.id)
-//     // );
-//     ////////////////////////////////////////
-//     // let newTodos = state.get("todos").filter((e) => e.get("id") !== action.id);
-//     // return {
-//     //   todos: newTodos,
-//     //   search: state.search,
-//   }
-//   return state;
-// }
-
+import NewsEditor from "./containers/pages/NewsEditor";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -90,6 +27,7 @@ root.render(
           <Route path="/newtodo" element={<NewTodoContainer />} />
           <Route path="/todo/:id" element={<TodoDetailContainer />} />
           <Route path="/edittodo/:id" element={<EditTodoContainer />} />
+          <Route path="/newseditor" element={<NewsEditor />} />
         </Routes>
       </BrowserRouter>
     </Provider>

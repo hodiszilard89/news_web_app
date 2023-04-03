@@ -2,6 +2,7 @@ import React from "react";
 import CardContainer from "../CardContainer";
 import MyCarusel from "../../components/MyCarusel";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import NavBar from "../../components/NavBar";
 
 const HomePage = () => {
   const items = [
@@ -62,6 +63,7 @@ const HomePage = () => {
   };
   return (
     <Container>
+      <NavBar />
       <Row>
         <MyCarusel />
       </Row>
