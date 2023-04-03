@@ -1,0 +1,60 @@
+/* .my-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0;
+         színt átlátszóságot állit rbga
+    
+    color: #fff;
+    font-size: 15px;
+    line-height: 1.5;
+    height: 20%;
+    text-decoration: none
+}
+*/
+
+
+/* .left-align-caption {
+        text-align: left;
+        left: 50px;
+        right: auto;
+        bottom: 10px;
+    }
+     */
+
+.vertical-scroll {
+    height: 35px;
+    overflow: hidden;
+    position: relative;
+}
+
+.scroll-text {
+    animation: slide-up 6s ease-in-out infinite;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    width: 100%;
+}
+
+@keyframes slide-up {
+    0% {
+        transform: translateY(100%);
+        animation-timing-function: ease-in;
+    }
+    10% {
+        transform: translateY(0%);
+        animation-timing-function: ease-out;
+    }
+    90% {
+        transform: translateY(0%);
+        animation-timing-function: ease-out;
+    }
+    100% {
+        transform: translateY(-100%);
+        animation-timing-function: ease-in;
+    }
+}
