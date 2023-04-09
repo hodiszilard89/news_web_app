@@ -1,18 +1,29 @@
 import React, { useState, useRef } from "react";
 
 import { Formik, Field, Form } from "formik";
-import { Row, Col } from "react-bootstrap";
+
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { Link } from "react-router-dom";
-function NewsEditor() {
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  FormGroup,
+  Label,
+  Input,
+} from "reactstrap";
+
+const NewsEditor = ({ users }) => {
   const initialValues = {};
 
   const onSubmit = (values) => {
     console.log(values);
   };
+
   return (
-    <div style={{ alignItems: "center", margin: "auto" }}>
+    <Container style={{ alignItems: "center", margin: "auto" }}>
       <Row>
         <Col md={2}> </Col>
         <Col md={8}>
@@ -71,7 +82,28 @@ function NewsEditor() {
                     />
                   )}
                 </Field>
-                <button type="submit">Submit</button>
+                <Label for="selectOption">
+                  <h3>Szerző</h3>
+                </Label>
+                <Field
+                  as={Input}
+                  key={1}
+                  type="select"
+                  name="writer"
+                  id="selectOption"
+                >
+                  <option value="">válassz</option>
+
+                  {users.map((user, id) => {
+                    return (
+                      <option key={id} value={user.get("chatName")}>
+                        {user.get("chatName")}
+                      </option>
+                    );
+                  })}
+                </Field>
+
+                <Button type="submit">Submit</Button>
               </Form>
             )}
           </Formik>
@@ -82,8 +114,8 @@ function NewsEditor() {
 
         <Col md={2}> </Col>
       </Row>
-    </div>
+    </Container>
   );
-}
+};
 
 export default NewsEditor;

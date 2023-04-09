@@ -21,6 +21,9 @@ class App extends Component {
           <Link to="/newseditor">
             <h4> NewsEditor</h4>
           </Link>
+          <Link to="/createaccunt">
+            <h4>CreateAccunt</h4>
+          </Link>
         </Container>
       </div>
     );

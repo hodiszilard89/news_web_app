@@ -42,6 +42,21 @@ export function addTodoOnServer(item) {
     // }, 1000);
   };
 }
+
+export function getUsers() {
+  let users;
+  fetch("/users")
+    .then((response) => response.json())
+    .then((data) => {
+      users = data;
+      console.log(users);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  return users;
+}
+
 export function delTodoOnServer(id) {
   return (dispatch) => {
     console.log("már majdnem");

@@ -14,7 +14,7 @@ public class UsersDTO {
     private String firstName;
     @NotBlank(message = "nem lehet üres")
     private String secName;
-    private List<News> likes;
+//    private List<News> likes;
     public UsersDTO() {
     }
 
@@ -50,11 +50,11 @@ public class UsersDTO {
         this.secName = secName;
     }
 
-    public List<News> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(List<News> likes) {
-        this.likes = likes;
-    }
+//    public List<News> getLikes() {
+//        return likes;
+//    }
+//
+//    public void setLikes(List<News> likes) {
+//        this.likes = likes;
+//    }
 }

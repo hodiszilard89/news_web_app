@@ -14,27 +14,29 @@ public class NewsDTO {
     private Long   id;
     @Column(columnDefinition = "text")
     private String text;
-    private Users  writer;
+    private UsersDTO  writer;
     private String imgPath;
     private String title;
 
-    public Users getWriter() {
+    private List<UsersDTO> likes;
+
+    public UsersDTO getWriter() {
         return writer;
     }
 
-    public void setWriter(Users writer) {
+    public void setWriter(UsersDTO writer) {
         this.writer = writer;
     }
 
-    public List<Users> getLikes() {
+    public List<UsersDTO> getLikes() {
         return likes;
     }
 
-    public void setLikes(List<Users> likes) {
+    public void setLikes(List<UsersDTO> likes) {
         this.likes = likes;
     }
 
-    private List<Users> likes;
+
 
 
 

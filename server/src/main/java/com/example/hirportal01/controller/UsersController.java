@@ -1,6 +1,7 @@
 package com.example.hirportal01.controller;
 
 import com.example.hirportal01.dto.UsersDTO;
+import com.example.hirportal01.email.SendMail;
 import com.example.hirportal01.exception.InvalidEntityException;
 import com.example.hirportal01.service.impl.UsersServiceImpl;
 import org.slf4j.Logger;
@@ -50,11 +51,17 @@ public class UsersController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<UsersDTO> create(@RequestBody @Valid UsersDTO  usersDTO, BindingResult bindingResult) {
         checkErrors(bindingResult);
+        try {
+            new SendMail().sendEmail();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).
                 body(usersService.create(usersDTO));
     }
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<UsersDTO> update(@RequestBody @Valid UsersDTO usersDTO) {
+    public ResponseEntity<UsersDTO> update(@RequestBody UsersDTO usersDTO) {
         UsersDTO updatedUser = usersService.update(usersDTO);
         return ResponseEntity.ok(updatedUser);
     }
