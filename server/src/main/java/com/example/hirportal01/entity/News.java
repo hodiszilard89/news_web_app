@@ -1,15 +1,17 @@
 package com.example.hirportal01.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class News {
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long   id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @Column(columnDefinition = "text")
     private String text;
 

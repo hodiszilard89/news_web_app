@@ -66,7 +66,7 @@ export const MyNavbar: VFC = () => {
                   />
                   <Button variant="outline-success">Keresés</Button>
                 </Form>
-                <Link to="/signin">
+                <Link to="/login">
                   <FaUser size="2em" className="ms-5" />
                 </Link>
               </Offcanvas.Body>

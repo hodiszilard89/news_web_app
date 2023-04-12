@@ -3,6 +3,7 @@ package com.example.hirportal01.controller;
 import com.example.hirportal01.dto.NewsDTO;
 import com.example.hirportal01.dto.UsersDTO;
 import com.example.hirportal01.service.NewsService;
+import com.example.hirportal01.service.impl.NewsServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,9 @@ import java.util.Optional;
 @RequestMapping("/news")
 public class NewsController {
 
-    private final NewsService newsService;
+    private final NewsServiceImpl newsService;
 
-    public NewsController(NewsService newsService) {
+    public NewsController(NewsServiceImpl newsService) {
         this.newsService = newsService;
     }
 

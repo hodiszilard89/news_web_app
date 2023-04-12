@@ -17,4 +17,5 @@ public interface NewsService {
     NewsDTO update(NewsDTO newsDTO);
     NewsDTO save(NewsDTO newsDTO);
     List<UsersDTO> getLikers(Long id);
+
 }

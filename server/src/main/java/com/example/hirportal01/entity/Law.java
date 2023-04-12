@@ -1,15 +1,21 @@
 package com.example.hirportal01.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.List;
 
+
 @Entity
 public class Law {
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String title;
+
+
     @ManyToMany(mappedBy = "laws")
     private List<Users> users;
 

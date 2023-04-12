@@ -20,3 +20,7 @@
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+jwt:
+  secret: 9e37298f54dbddab553b69e9fa6cf0b1c5961c016c4d6a03f28f51e49f31685a
+  issuer: user
+  tokenValidityInMinutes: 25

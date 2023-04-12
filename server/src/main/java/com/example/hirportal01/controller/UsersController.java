@@ -35,6 +35,13 @@ public class UsersController {
         return ResponseEntity.ok().body(users);
     }
 
+//    @RequestMapping(path="/user",method = RequestMethod.GET)
+//    public ResponseEntity<UsersDTO> findUser() {
+//        UsersDTO users = usersService.findUser("test33", "password");
+//        System.out.println(users);
+//        return ResponseEntity.ok().body(users);
+//    }
+
     /**
      * FUNKCIONÁLIS FORMÁT ELEMEZNI!!
      */

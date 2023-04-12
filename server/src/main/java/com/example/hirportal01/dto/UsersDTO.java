@@ -1,21 +1,35 @@
 package com.example.hirportal01.dto;
 
+import com.example.hirportal01.entity.Law;
 import com.example.hirportal01.entity.News;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.UUID;
 
 public class UsersDTO {
     private Long Id;
+    @NotBlank
+    private String password;
     @NotBlank
     private String chatName;
     @NotBlank
     private String firstName;
     @NotBlank(message = "nem lehet üres")
     private String secName;
-//    private List<News> likes;
+    private List<News> likes;
+    //@JsonBackReference
+    private List<Law> laws;
     public UsersDTO() {
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Long getId() {
@@ -50,11 +64,20 @@ public class UsersDTO {
         this.secName = secName;
     }
 
-//    public List<News> getLikes() {
-//        return likes;
-//    }
-//
-//    public void setLikes(List<News> likes) {
-//        this.likes = likes;
-//    }
+    public List<News> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<News> likes) {
+        this.likes = likes;
+    }
+
+    public List<Law> getLaws() {
+        return laws;
+    }
+
+    public void setLaws(List<Law> laws) {
+        this.laws = laws;
+    }
+
 }

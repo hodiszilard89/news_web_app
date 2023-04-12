@@ -1,17 +1,23 @@
 package com.example.hirportal01.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class Users {
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long  Id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
+    private String password;
     @ManyToMany
     @JoinTable(name = "user_laws",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "law_id"))
+    @JsonBackReference
     private List<Law> laws;
 
     @OneToMany(mappedBy = "writer")
@@ -29,15 +35,14 @@ public class Users {
 
     private String secName;
 
-    public Users() {
-    }
+
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public List<Law> getLaws() {
@@ -86,5 +91,13 @@ public class Users {
 
     public void setLikes(List<News> likes) {
         this.likes = likes;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

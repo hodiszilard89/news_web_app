@@ -5,13 +5,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.Column;
 import java.util.List;
+import java.util.UUID;
 
 
 public class NewsDTO {
     public NewsDTO() {
     }
 
-    private Long   id;
+    private Long id;
     @Column(columnDefinition = "text")
     private String text;
     private UsersDTO  writer;
