@@ -1,16 +1,19 @@
 package com.example.hirportal01.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
-public class Users {
+public class Users{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private Date birthDay;
+    @Column(unique = true, nullable = false)
+    private String email;
 
     private String password;
     @ManyToMany
@@ -24,6 +27,7 @@ public class Users {
     private List<News> news;
 
     @ManyToMany
+    @ElementCollection(fetch = FetchType.EAGER)
     @JoinTable(name = "user_news_likes",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "news_id"))
@@ -35,7 +39,13 @@ public class Users {
 
     private String secName;
 
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public Long getId() {
         return id;
@@ -99,5 +109,13 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
     }
 }

@@ -24,7 +24,7 @@ export const newsApi = createApi({
         getNews:builder.query<GetNewsResponse []| undefined, GetNewsQueryParams | undefined>({
             query:(filter:GetNewsQueryParams)=>{
                 return{
-                    url:"/",
+                    url:"",
                 }
             }
         })

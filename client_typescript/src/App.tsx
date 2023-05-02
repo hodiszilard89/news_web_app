@@ -5,8 +5,10 @@ import { MyCarousel } from "./componens/my-carousel";
 import { Route, Routes, Router, BrowserRouter } from "react-router-dom";
 import { useNews } from "./store/hooks/useNews";
 import { HomePage } from "./componens/page/home-page";
+import Login from "./login/login";
 import { LoginPage } from "./componens/page/login/login";
 import { RegisterPage } from "./componens/page/login/regist";
+import NewsEditor from "./login/edit";
 
 export const App = () => {
   const { isLoading, isFetching, newsData } = useNews({});
@@ -16,8 +18,9 @@ export const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/edit" element={<NewsEditor />} />
         </Routes>
       </BrowserRouter>
     </div>

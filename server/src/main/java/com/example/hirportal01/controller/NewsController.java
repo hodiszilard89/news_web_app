@@ -7,6 +7,7 @@ import com.example.hirportal01.service.impl.NewsServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
@@ -37,7 +38,8 @@ public class NewsController {
         return ResponseEntity.ok(newsService.findAll());
     }
 
-    @RequestMapping(path = "/{id}",method = RequestMethod.DELETE)
+
+    @RequestMapping(path = "{id}",method = RequestMethod.DELETE)
     public  ResponseEntity<Void>delete(@PathVariable Long id){
         newsService.delete(id);
         return  ResponseEntity.noContent().build();

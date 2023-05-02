@@ -1,7 +1,7 @@
 import { User } from "../models/user";
 import {ValidationError} from 'yup'
-const TOKE_NAME ="autToken"
-const API_URL = "/users"
+const TOKE_NAME ="authToken"
+const API_URL = "/authentication"
 
 class AuthServiceIml{
    
@@ -28,7 +28,11 @@ class AuthServiceIml{
         {
             throw new ValidationError ("invalid username or password")
         }
-        const {authToken} = await response.json() 
+        const authToken = await response.text();
+        console.log(authToken);
+        //sessionStorage.setItem("authToken", authToken);
+        //console.log(response) ;
+        //const {authToken} = await response.json() 
         this.authToken=authToken;
     }
 

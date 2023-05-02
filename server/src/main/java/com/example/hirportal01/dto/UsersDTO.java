@@ -5,12 +5,25 @@ import com.example.hirportal01.entity.News;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 public class UsersDTO {
     private Long Id;
+
+    public String getEmail() {
+        return email;
+    }
+@Column(unique = true, nullable = false)
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @NotBlank
+    private String email;
     @NotBlank
     private String password;
     @NotBlank
@@ -22,7 +35,17 @@ public class UsersDTO {
     private List<News> likes;
     //@JsonBackReference
     private List<Law> laws;
+
+    private Date birthDay;
     public UsersDTO() {
+    }
+
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
     }
 
     public String getPassword() {

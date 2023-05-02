@@ -23,8 +23,8 @@ public class JwtConfiguration {
     @Bean
     public JWTVerifier jwtVerifier() {
         return JWT.require(hmac256Algorithm())
-            .withIssuer(jwtConfigurationProperties.getIssuer())
-            .build();
+                .withIssuer(jwtConfigurationProperties.getIssuer())
+                .build();
     }
 
 }

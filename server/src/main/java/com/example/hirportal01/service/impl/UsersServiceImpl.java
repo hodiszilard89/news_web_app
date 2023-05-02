@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -88,7 +87,7 @@ public class UsersServiceImpl implements UsersService {
     }
     public UsersDTO findUserByChatName(String username) {
         System.out.println(username);
-        Optional<Users> optionalUser = usersRepository.findUserByChatName(username);
+        Optional<Users> optionalUser = usersRepository.findUserByEmail(username);
         if (optionalUser.isPresent()){
             return modelMapper.map(optionalUser.get(),UsersDTO.class);
         }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ValidationError } from "yup";
 
 export const LoginPage = () => {
   const [token, setToken] = useState<string | null>(
@@ -7,6 +8,7 @@ export const LoginPage = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log(event);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -27,15 +29,14 @@ export const LoginPage = () => {
       if (response.ok) {
         const data1 = await response.text();
         console.log(data1);
-        sessionStorage.setItem("token", data1);
+        sessionStorage.setItem("authToken", data1);
       } else {
+        throw new ValidationError("Invalid userneme or password");
         console.error(response.statusText);
       }
     } catch (error) {
       console.error(error);
     }
-
-    console.log(sessionStorage.getItem("token"));
   };
 
   return (

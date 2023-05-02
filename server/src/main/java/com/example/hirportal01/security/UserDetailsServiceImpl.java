@@ -1,25 +1,23 @@
 package com.example.hirportal01.security;
 
-import com.example.hirportal01.dto.UsersDTO;
-import com.example.hirportal01.entity.Law;
 import com.example.hirportal01.entity.Users;
-import com.example.hirportal01.exception.EntityNotFoundException;
 import com.example.hirportal01.repository.UsersRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.*;
 
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+@EnableTransactionManagement
+public class UserDetailsServiceImpl implements UserDetailsService{
     @Autowired
     private final UsersRepository usersRepository;
     @Autowired
@@ -33,18 +31,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String chatName;
         String password;
+
         //System.out.println(usersRepository.findUserByChatName(username).get().getChatName());
-        Optional<Users> optionalUsers = usersRepository.findUserByChatName(username);
+        Optional<Users> optionalUsers = usersRepository.findUserByEmail(username);
         if (optionalUsers.isPresent()){
-            chatName = optionalUsers.get().getChatName();
-            password=optionalUsers.get().getPassword();
+            System.out.println(optionalUsers.get().getLikes());
         }
         else{
             throw new UsernameNotFoundException(username);
         }
 
+        UserDetailsImpl udi= new   UserDetailsImpl(optionalUsers.get());
+       // System.out.println("asdasdasdasd "+udi.getAuthorities());
 
-        return new User(chatName, password,Collections.emptyList());
+        return udi;
     }
 
 }

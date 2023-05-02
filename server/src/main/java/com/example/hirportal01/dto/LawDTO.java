@@ -2,6 +2,7 @@ package com.example.hirportal01.dto;
 
 import com.example.hirportal01.entity.Users;
 
+import javax.persistence.ManyToMany;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ public class LawDTO {
     private String title;
 
     private List<Users> users;
+
 
     public List<Users> getUsers() {
         return users;

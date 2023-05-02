@@ -67,10 +67,10 @@ public class JwtConfigurationProperties {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-            .append("secret", secret)
-            .append("issuer", issuer)
-            .append("tokenValidityInMinutes", tokenValidityInMinutes)
-            .toString();
+                .append("secret", secret)
+                .append("issuer", issuer)
+                .append("tokenValidityInMinutes", tokenValidityInMinutes)
+                .toString();
     }
 
 }
