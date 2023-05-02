@@ -1,12 +1,14 @@
 package com.example.hirportal01.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
-public class Users{
+public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -117,5 +119,41 @@ public class Users{
 
     public void setBirthDay(Date birthDay) {
         this.birthDay = birthDay;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authoritySet = new HashSet<>();
+        for (var r:this.laws){
+            var sga=new SimpleGrantedAuthority(r.getTitle());
+            authoritySet.add(sga);
+        }
+        return authoritySet;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.chatName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

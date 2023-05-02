@@ -2,14 +2,13 @@ package com.example.hirportal01.dto;
 
 import com.example.hirportal01.entity.Law;
 import com.example.hirportal01.entity.News;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import io.swagger.annotations.ApiModelProperty;
+
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+
 
 public class UsersDTO {
     private Long Id;

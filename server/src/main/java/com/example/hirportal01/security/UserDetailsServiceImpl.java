@@ -5,17 +5,20 @@ import com.example.hirportal01.repository.UsersRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 
 @Service
+@Transactional
 @EnableTransactionManagement
 public class UserDetailsServiceImpl implements UserDetailsService{
     @Autowired
@@ -35,16 +38,17 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         //System.out.println(usersRepository.findUserByChatName(username).get().getChatName());
         Optional<Users> optionalUsers = usersRepository.findUserByEmail(username);
         if (optionalUsers.isPresent()){
-            System.out.println(optionalUsers.get().getLikes());
+           // System.out.println(optionalUsers.get().getLikes());
         }
         else{
             throw new UsernameNotFoundException(username);
         }
+//        System.out.println(optionalUsers.get().getUsername());
+//
+//        System.out.println(optionalUsers.get().getAuthorities());
 
-        UserDetailsImpl udi= new   UserDetailsImpl(optionalUsers.get());
-       // System.out.println("asdasdasdasd "+udi.getAuthorities());
 
-        return udi;
+        return new User("test2","pass", true,true,true,true,optionalUsers.get().getAuthorities());
     }
 
 }
