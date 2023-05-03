@@ -14,11 +14,7 @@ export const useNews = (query: GetNewsQueryParams) => {
       ...rawNewsData
     }
   }
-
-
   let newsData:News[]=[];
-
-
   if (data) {
     
     newsData = data

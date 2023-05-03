@@ -11,7 +11,8 @@ export interface NewsListItemProps {
 }
 
 export const NewsListItem: VFC<NewsListItemProps> = ({ news }) => {
-  //console.log(user)
+  const id = news.id;
+  //console.log(id);
   return (
     <Card>
       <Card.Body>
@@ -20,8 +21,13 @@ export const NewsListItem: VFC<NewsListItemProps> = ({ news }) => {
             <b>{news.title}</b>
           </h4>
         </Card.Title>
-        <Card.Img src="https://picsum.photos/200/100" />
-        <Card.Subtitle className="my-2 text-muted">Card Subtitle</Card.Subtitle>
+        <Link to={`news/${id}`}>
+          <Card.Img src="https://picsum.photos/200/100" />
+
+          <Card.Subtitle className="my-2 text-muted">
+            Card Subtitle
+          </Card.Subtitle>
+        </Link>
         <Card.Text>
           Some quick example text to build on the card title and make up the
           bulk of the card's content.
