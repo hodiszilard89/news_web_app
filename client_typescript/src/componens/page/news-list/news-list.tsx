@@ -1,15 +1,20 @@
-import React, { VFC } from "react";
+import React, { FC } from "react";
 import { Grid, GridItem, ListItem, OrderedList } from "@chakra-ui/react";
-import { useNews } from "../../../store/hooks/useNews";
-import { User } from "../../../models/user";
+import { useNewsList } from "../../../store/hooks/use-news-list";
+
 import { GetNewsQueryParams } from "../../../store/news/news-api";
 import { NewsListItem } from "./news-list-item";
+import { News } from "../../../models/news";
 
-export const NewsList: VFC = () => {
+interface NewsListItemProps {
+  news: News[];
+}
+
+export const NewsList: FC<NewsListItemProps> = ({ news }) => {
   let query: GetNewsQueryParams;
   query = {};
-  const { newsData } = useNews(query);
-  console.log(newsData);
+  const { newsData } = useNewsList(query);
+  //console.log();
   return (
     <Grid
       as={OrderedList}

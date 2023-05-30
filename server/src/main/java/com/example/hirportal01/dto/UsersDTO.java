@@ -1,5 +1,6 @@
 package com.example.hirportal01.dto;
 
+import com.example.hirportal01.entity.Comment;
 import com.example.hirportal01.entity.Law;
 import com.example.hirportal01.entity.News;
 
@@ -33,10 +34,20 @@ public class UsersDTO {
     private String secName;
     private List<News> likes;
     //@JsonBackReference
-    private List<Law> laws;
+    //private List<Law> laws;
+
+    private List<Comment> comments;
 
     private Date birthDay;
     public UsersDTO() {
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public Date getBirthDay() {
@@ -94,12 +105,12 @@ public class UsersDTO {
         this.likes = likes;
     }
 
-    public List<Law> getLaws() {
-        return laws;
-    }
-
-    public void setLaws(List<Law> laws) {
-        this.laws = laws;
-    }
+//    public List<Law> getLaws() {
+//        return laws;
+//    }
+//
+//    public void setLaws(List<Law> laws) {
+//        this.laws = laws;
+//    }
 
 }

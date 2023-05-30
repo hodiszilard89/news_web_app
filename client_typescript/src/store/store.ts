@@ -1,9 +1,13 @@
  import {combineReducers, configureStore} from "@reduxjs/toolkit"
 import { newsPath, newsReducer, newsMiddleware } from "./news/news-api"
-import { type } from "os"
+import { searchPath, searchReducer } from "./news/search-slice"
+import {newsEditorPath, newsEditorReducer} from "./news/editor-slice"
+
  
  const appReducer = combineReducers({
     [newsPath] : newsReducer,
+    [searchPath]: searchReducer,
+    [newsEditorPath]: newsEditorReducer,
  }) 
 
 

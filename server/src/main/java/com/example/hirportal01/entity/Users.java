@@ -12,11 +12,16 @@ public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private Date birthDay;
+
     @Column(unique = true, nullable = false)
     private String email;
 
+    @OneToMany
+    @JoinTable(name = "users_comment",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    private List<Comment> comments;
     private String password;
     @ManyToMany
     @JoinTable(name = "user_laws",
@@ -121,6 +126,13 @@ public class Users implements UserDetails {
         this.birthDay = birthDay;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

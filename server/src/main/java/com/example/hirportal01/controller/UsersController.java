@@ -20,7 +20,7 @@ import java.util.Optional;
 
 
 @RestController
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+
 @RequestMapping(path = "/users")
 public class UsersController {
 

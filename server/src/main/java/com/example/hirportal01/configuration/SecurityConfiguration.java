@@ -33,10 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // Setting the UserDetailsService does not have much effect, but it is necessary to override this
         // configuration to disable the default authentication mechanism.
         auth.userDetailsService(userDetailsService);
-//        auth.inMemoryAuthentication()
-//                .withUser("test1")
-//                .password("pass")
-//                .roles("ADMIN");
+
     }
 
     @Override
@@ -46,8 +43,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/authentication").permitAll()
+                .antMatchers("/news/**").permitAll()
                 .antMatchers("/news").permitAll()
-                .antMatchers("/law").hasRole("ADMIN")
+                .antMatchers("/users/**").permitAll()
+                //.antMatchers("/law/**").permitAll()
+                .antMatchers("/law").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);

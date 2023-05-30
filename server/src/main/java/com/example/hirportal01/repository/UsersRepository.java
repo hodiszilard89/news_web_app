@@ -14,4 +14,5 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
     @Query(value= "select * from users where chat_name=:email", nativeQuery = true)
     Optional<Users> findUserByEmail(@Param("email")String username);
 
+
 }

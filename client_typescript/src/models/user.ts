@@ -1,6 +1,7 @@
 export interface User{
-    id:number,
+    id?:number,
     firstName: string,
     secName:string,
     chatName:string
+
 }

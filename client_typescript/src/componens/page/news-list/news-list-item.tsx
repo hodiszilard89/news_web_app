@@ -1,4 +1,4 @@
-import React, { VFC } from "react";
+import React, { FC } from "react";
 
 import { Card, Row, Col } from "react-bootstrap";
 import { FaNewspaper, FaThumbsUp, FaUser } from "react-icons/fa";
@@ -10,9 +10,9 @@ export interface NewsListItemProps {
   news: News;
 }
 
-export const NewsListItem: VFC<NewsListItemProps> = ({ news }) => {
+export const NewsListItem: FC<NewsListItemProps> = ({ news }) => {
   const id = news.id;
-  //console.log(id);
+
   return (
     <Card>
       <Card.Body>
@@ -22,7 +22,7 @@ export const NewsListItem: VFC<NewsListItemProps> = ({ news }) => {
           </h4>
         </Card.Title>
         <Link to={`news/${id}`}>
-          <Card.Img src="https://picsum.photos/200/100" />
+          <Card.Img src={news.imgPath} />
 
           <Card.Subtitle className="my-2 text-muted">
             Card Subtitle

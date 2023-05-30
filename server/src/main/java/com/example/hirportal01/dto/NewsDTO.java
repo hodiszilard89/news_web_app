@@ -1,5 +1,6 @@
 package com.example.hirportal01.dto;
 
+import com.example.hirportal01.entity.Comment;
 import com.example.hirportal01.entity.Users;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -15,6 +16,9 @@ public class NewsDTO {
     private Long id;
     @Column(columnDefinition = "text")
     private String text;
+    @Column(columnDefinition = "text")
+    private List<Comment> comments;
+    private String type;
     private UsersDTO  writer;
     private String imgPath;
     private String title;
@@ -33,12 +37,17 @@ public class NewsDTO {
         return likes;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public void setLikes(List<UsersDTO> likes) {
         this.likes = likes;
     }
-
-
-
 
 
     public Long getId() {
@@ -71,5 +80,13 @@ public class NewsDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

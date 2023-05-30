@@ -21,7 +21,7 @@ public class AuthorizationCheckController {
 
     @RequestMapping(path = "/authentication", method = RequestMethod.GET)
     public String checkAuthorizationWithAuthentication(Authentication authentication) {
-        return String.format("Welcome, %s!", authentication.getName());
+        return String.format("Welcome, %s!", authentication.getAuthorities());
     }
 
     @RequestMapping(path = "/request", method = RequestMethod.GET)
