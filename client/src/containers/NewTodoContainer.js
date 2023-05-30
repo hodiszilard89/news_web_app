@@ -3,7 +3,9 @@ import NewTodo from "../components/NewTodo";
 import { addTodo, addTodoOnServer } from "../actions/todos";
 
 function mapStateToProps(state, props) {
-  return {};
+  return {
+    users: state.users,
+  };
 }
 function mapDispatchToProps(dispatch, props) {
   return {

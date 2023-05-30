@@ -1,28 +1,3 @@
-/* .my-caption {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 0;
-         színt átlátszóságot állit rbga
-    
-    color: #fff;
-    font-size: 15px;
-    line-height: 1.5;
-    height: 20%;
-    text-decoration: none
-}
-*/
-
-
-/* .left-align-caption {
-        text-align: left;
-        left: 50px;
-        right: auto;
-        bottom: 10px;
-    }
-     */
-
 .vertical-scroll {
     height: 35px;
     overflow: hidden;

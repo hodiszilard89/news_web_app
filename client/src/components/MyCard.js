@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Row, Col } from "react-bootstrap";
 import { FaNewspaper, FaThumbsUp, FaUser } from "react-icons/fa";
+import LikeButton from "../atom/LikeButton";
 import { Link } from "react-router-dom";
 
 const MyCard = ({ news }) => {
@@ -21,23 +22,15 @@ const MyCard = ({ news }) => {
         <Row>
           <Col>
             <Link>
-              <FaThumbsUp
-                className="me-2 fs-5 "
-                style={{ color: "gray" }}
-                onClick={(e) => console.log("klick")}
-              />
+              <LikeButton />
             </Link>
             (123)
             {/* <Card.Link> Another Link</Card.Link> */}
           </Col>
           <Col className="text-end">
-            <p>dátum</p>
+            <p>szerző</p>
           </Col>
         </Row>
-        {/* <div style={{ display: "inline-block" }}>
-          <div className="text-start"></div>
-          <div className="text-end"></div>
-        </div> */}
       </Card.Body>
     </Card>
   );

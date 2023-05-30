@@ -12,4 +12,5 @@ public interface UsersService {
     Optional<UsersDTO> findById(Long id);
     UsersDTO update(UsersDTO usersDTO);
     void delete(Long id);
+    UsersDTO findUser(String username, String password);
 }

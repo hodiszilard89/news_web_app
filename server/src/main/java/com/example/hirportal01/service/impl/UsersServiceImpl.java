@@ -77,4 +77,20 @@ public class UsersServiceImpl implements UsersService {
         }
     }
 
+    @Override
+    public UsersDTO findUser(String username, String password) {
+        Optional<Users> optionalUser = usersRepository.findUser(username,password);
+        if (optionalUser.isPresent()){
+            return modelMapper.map(optionalUser.get(),UsersDTO.class);
+        }
+        else {throw new EntityNotFoundException("User");}
+    }
+    public UsersDTO findUserByChatName(String username) {
+        System.out.println(username);
+        Optional<Users> optionalUser = usersRepository.findUserByEmail(username);
+        if (optionalUser.isPresent()){
+            return modelMapper.map(optionalUser.get(),UsersDTO.class);
+        }
+        else {throw new EntityNotFoundException("User");}
+    }
 }

@@ -1,41 +1,53 @@
 package com.example.hirportal01.dto;
 
+import com.example.hirportal01.entity.Comment;
 import com.example.hirportal01.entity.Users;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.Column;
 import java.util.List;
+import java.util.UUID;
 
 
 public class NewsDTO {
     public NewsDTO() {
     }
 
-    private Long   id;
+    private Long id;
     @Column(columnDefinition = "text")
     private String text;
-    private Users  writer;
+    @Column(columnDefinition = "text")
+    private List<Comment> comments;
+    private String type;
+    private UsersDTO  writer;
     private String imgPath;
     private String title;
 
-    public Users getWriter() {
+    private List<UsersDTO> likes;
+
+    public UsersDTO getWriter() {
         return writer;
     }
 
-    public void setWriter(Users writer) {
+    public void setWriter(UsersDTO writer) {
         this.writer = writer;
     }
 
-    public List<Users> getLikes() {
+    public List<UsersDTO> getLikes() {
         return likes;
     }
 
-    public void setLikes(List<Users> likes) {
-        this.likes = likes;
+    public String getType() {
+        return type;
     }
 
-    private List<Users> likes;
+    public void setType(String type) {
+        this.type = type;
+    }
 
+    public void setLikes(List<UsersDTO> likes) {
+        this.likes = likes;
+    }
 
 
     public Long getId() {
@@ -68,5 +80,13 @@ public class NewsDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

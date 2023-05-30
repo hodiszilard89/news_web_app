@@ -2,6 +2,7 @@ package com.example.hirportal01.service.impl;
 
 import com.example.hirportal01.dto.NewsDTO;
 import com.example.hirportal01.dto.UsersDTO;
+import com.example.hirportal01.entity.Comment;
 import com.example.hirportal01.entity.News;
 import com.example.hirportal01.entity.Users;
 import com.example.hirportal01.repository.NewsRepository;
@@ -59,11 +60,34 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public void addComment(Comment comment) {
+        Optional<News> optionalNews = newsRepository.findById(comment.getNews().getId());
+        if(optionalNews.isEmpty()){
+            throw new RuntimeException();
+        } else{
+            optionalNews.get().getComments().add(comment);
+        }
+    }
+
+    @Override
     public NewsDTO save(NewsDTO newsDTO) {
         newsDTO.setId(null);
         News news=newsRepository.save(modelMapper
                                       .map(newsDTO,News.class));
         return modelMapper.map(news,NewsDTO.class);
+    }
+
+    @Override
+    public List<NewsDTO> findNewsByType(String type) {
+        List<News> optionalNewsList = newsRepository.findNewsByType(type);
+        if (optionalNewsList.isEmpty()){
+            throw new RuntimeException();
+        }
+
+
+        return optionalNewsList.stream().map(news -> modelMapper
+                        .map(news,NewsDTO.class))
+                        .collect(Collectors.toList());
     }
 
     /**
