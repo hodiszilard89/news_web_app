@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl {
-    private CommentRepository commentRepository;
-    private ModelMapper modelMapper;
+    private final CommentRepository commentRepository;
+    private final ModelMapper modelMapper;
 
     public CommentServiceImpl(CommentRepository commentRepository, ModelMapper modelMapper) {
         this.commentRepository = commentRepository;
@@ -21,9 +21,13 @@ public class CommentServiceImpl {
 
     public List<CommentDTO> findAll(){
         List<Comment> commentList = commentRepository.findAll();
-
         return commentList.stream().map(comment -> modelMapper
                 .map(comment,CommentDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    public CommentDTO create(CommentDTO commentDTO){
+        Comment comment = modelMapper.map(commentDTO,Comment.class);
+        return modelMapper.map(commentRepository.save(comment),CommentDTO.class);
     }
 }

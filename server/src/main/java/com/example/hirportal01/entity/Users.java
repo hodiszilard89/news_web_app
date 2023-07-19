@@ -8,12 +8,13 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-public class Users implements UserDetails {
+public class Users implements UserDetails  {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Date birthDay;
+   // private Date birthDay;
 
+    private  String imagePath;
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -23,22 +24,24 @@ public class Users implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "comment_id"))
     private List<Comment> comments;
     private String password;
-    @ManyToMany
-    @JoinTable(name = "user_laws",
-            joinColumns = @JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "law_id"))
+
+    @ManyToMany(mappedBy = "users")
     @JsonBackReference
     private List<Law> laws;
 
     @OneToMany(mappedBy = "writer")
     private List<News> news;
 
-    @ManyToMany
-    @ElementCollection(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_news_likes",
-            joinColumns = @JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "news_id"))
+    @ManyToMany(mappedBy = "likes")
     private List<News> likes;
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     private String chatName;
 
@@ -118,13 +121,13 @@ public class Users implements UserDetails {
         this.password = password;
     }
 
-    public Date getBirthDay() {
-        return birthDay;
-    }
-
-    public void setBirthDay(Date birthDay) {
-        this.birthDay = birthDay;
-    }
+//    public Date getBirthDay() {
+//        return birthDay;
+//    }
+//
+//    public void setBirthDay(Date birthDay) {
+//        this.birthDay = birthDay;
+//    }
 
     public List<Comment> getComments() {
         return comments;
@@ -134,10 +137,11 @@ public class Users implements UserDetails {
         this.comments = comments;
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authoritySet = new HashSet<>();
-        for (var r:this.laws){
+        for (var r:getLaws()){
             var sga=new SimpleGrantedAuthority(r.getTitle());
             authoritySet.add(sga);
         }
@@ -169,3 +173,5 @@ public class Users implements UserDetails {
         return true;
     }
 }
+
+

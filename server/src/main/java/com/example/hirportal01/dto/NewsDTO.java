@@ -1,12 +1,18 @@
 package com.example.hirportal01.dto;
 
+//import com.example.hirportal01.entity.Comment;
+//import com.example.hirportal01.entity.Users;
+//import com.fasterxml.jackson.annotation.JsonBackReference;
+//
+//import javax.persistence.Column;
 import com.example.hirportal01.entity.Comment;
+import com.example.hirportal01.entity.TypeOfNews;
 import com.example.hirportal01.entity.Users;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.mapping.Array;
 
 import javax.persistence.Column;
-import java.util.List;
-import java.util.UUID;
+
+import java.util.*;
 
 
 public class NewsDTO {
@@ -16,39 +22,64 @@ public class NewsDTO {
     private Long id;
     @Column(columnDefinition = "text")
     private String text;
-    @Column(columnDefinition = "text")
-    private List<Comment> comments;
-    private String type;
-    private UsersDTO  writer;
+
+    private  Set<TypeOfNews>types;
+    private Users  writer;
     private String imgPath;
     private String title;
+    private String subtitle;
+    private List<Users> likes;
 
-    private List<UsersDTO> likes;
+    public String getSubtitle() {
+        return subtitle;
+    }
+    private Date releaseDate;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
 
-    public UsersDTO getWriter() {
+    public Users getWriter() {
         return writer;
     }
 
-    public void setWriter(UsersDTO writer) {
+    public void setWriter(Users writer) {
         this.writer = writer;
     }
 
-    public List<UsersDTO> getLikes() {
+    public List<Users> getLikes() {
         return likes;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setLikes(List<UsersDTO> likes) {
+    public void setLikes(List<Users> likes) {
         this.likes = likes;
     }
 
+    private List<CommentDTO> comments;
+
+
+    public Set<TypeOfNews> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<TypeOfNews> types) {
+        this.types = types;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public List<CommentDTO> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentDTO> comments) {
+        this.comments = comments;
+    }
 
     public Long getId() {
         return id;
@@ -82,11 +113,4 @@ public class NewsDTO {
         this.title = title;
     }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
 }

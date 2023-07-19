@@ -18,6 +18,7 @@ public class JwtUtil {
 
     private static final String USERNAME_CLAIM = "username";
     private static final String ROLE_CLAIM = "role";
+    private static final String ID_CLAIM = "id";
 
     private final Algorithm algorithm;
     private final JWTVerifier jwtVerifier;
@@ -32,11 +33,12 @@ public class JwtUtil {
         this.jwtConfigurationProperties = jwtConfigurationProperties;
     }
 
-    public String createAndSignToken(String username, String role) {
+    public String createAndSignToken(String username, String role, Long id) {
         return JWT.create()
                 .withIssuer(jwtConfigurationProperties.getIssuer())
                 .withClaim(USERNAME_CLAIM, username)
                 .withClaim(ROLE_CLAIM,  role)
+                .withClaim(ID_CLAIM,  id)
                 .withExpiresAt(createExpirationDate())
                 .sign(algorithm);
     }

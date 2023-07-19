@@ -1,20 +1,24 @@
 package com.example.hirportal01.controller;
 
+import com.example.hirportal01.dto.CommentDTO;
+import com.example.hirportal01.dto.NewsDTO;
 import com.example.hirportal01.dto.UsersDTO;
-import com.example.hirportal01.email.SendMail;
+import com.example.hirportal01.entity.Law;
 import com.example.hirportal01.exception.InvalidEntityException;
 import com.example.hirportal01.service.impl.UsersServiceImpl;
+import org.json.JSONObject;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,10 +28,12 @@ import java.util.Optional;
 @RequestMapping(path = "/users")
 public class UsersController {
 
+    private final ModelMapper modelMapper;
     private final UsersServiceImpl usersService;
     private static final Logger LOGGER= LoggerFactory.getLogger(UsersController.class);
 
-    public UsersController(UsersServiceImpl usersService) {
+    public UsersController(ModelMapper modelMapper, UsersServiceImpl usersService) {
+        this.modelMapper = modelMapper;
         this.usersService = usersService;
     }
 
@@ -37,12 +43,12 @@ public class UsersController {
         return ResponseEntity.ok().body(users);
     }
 
-//    @RequestMapping(path="/user",method = RequestMethod.GET)
-//    public ResponseEntity<UsersDTO> findUser() {
-//        UsersDTO users = usersService.findUser("test33", "password");
-//        System.out.println(users);
-//        return ResponseEntity.ok().body(users);
-//    }
+    @RequestMapping(path="/addcomment",method = RequestMethod.POST)
+    public ResponseEntity<CommentDTO> addComment(@RequestBody CommentDTO commentDTO) {
+
+        usersService.addComment(commentDTO);
+        return ResponseEntity.ok().body(null);
+    }
 
     /**
      * FUNKCIONÁLIS FORMÁT ELEMEZNI!!
@@ -58,14 +64,17 @@ public class UsersController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<UsersDTO> create(@RequestBody @Valid UsersDTO  usersDTO, BindingResult bindingResult) {
-        checkErrors(bindingResult);
-        try {
-            new SendMail().sendEmail();
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
+   // public ResponseEntity<UsersDTO> create(@RequestBody @Valid UsersDTO  usersDTO, BindingResult bindingResult) {
+        //checkErrors(bindingResult);
+    public ResponseEntity<UsersDTO> create(@RequestBody String jsonString) {
+        System.out.println(jsonString);
+        JSONObject jsonObject = new JSONObject(jsonString);
+        UsersDTO usersDTO=modelMapper.map(jsonObject.toMap(),UsersDTO.class);
+        Date dt = new Date();
+        //newsDTO.setReleaseDate(dt);
+        //System.out.println(newsDTO.getReleaseDate());
+        //ystem.out.println(newsDTO.getImgPath());
+        System.out.println("laws"+ usersDTO.getLaws()+" "+new Law().getUsers());
         return ResponseEntity.status(HttpStatus.CREATED).
                 body(usersService.create(usersDTO));
     }

@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 @EnableWebSecurity
@@ -38,16 +40,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/authentication").permitAll()
+                .antMatchers("/news/delete/**").hasAuthority("ADMIN")
                 .antMatchers("/news/**").permitAll()
-                .antMatchers("/news").permitAll()
                 .antMatchers("/users/**").permitAll()
                 //.antMatchers("/law/**").permitAll()
                 .antMatchers("/law").hasAuthority("ADMIN")
+                .antMatchers("/comment").hasAnyAuthority("ADMIN","USER","READER")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);

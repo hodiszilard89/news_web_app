@@ -3,6 +3,7 @@ package com.example.hirportal01.dto;
 import com.example.hirportal01.entity.News;
 import com.example.hirportal01.entity.Users;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class CommentDTO {

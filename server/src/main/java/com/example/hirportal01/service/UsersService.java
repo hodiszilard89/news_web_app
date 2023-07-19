@@ -1,5 +1,6 @@
 package com.example.hirportal01.service;
 
+import com.example.hirportal01.dto.CommentDTO;
 import com.example.hirportal01.dto.UsersDTO;
 
 
@@ -13,4 +14,5 @@ public interface UsersService {
     UsersDTO update(UsersDTO usersDTO);
     void delete(Long id);
     UsersDTO findUser(String username, String password);
+    void addComment(CommentDTO commentDTO);
 }

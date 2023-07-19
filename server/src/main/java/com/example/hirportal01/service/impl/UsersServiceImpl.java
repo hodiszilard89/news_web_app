@@ -1,15 +1,22 @@
 package com.example.hirportal01.service.impl;
 
+import com.example.hirportal01.dto.CommentDTO;
 import com.example.hirportal01.dto.UsersDTO;
+import com.example.hirportal01.entity.Comment;
+import com.example.hirportal01.entity.Law;
 import com.example.hirportal01.entity.Users;
 import com.example.hirportal01.exception.EntityNotFoundException;
+import com.example.hirportal01.repository.LawRepository;
 import com.example.hirportal01.repository.UsersRepository;
 import com.example.hirportal01.service.UsersService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -20,11 +27,12 @@ import java.util.stream.Collectors;
 public class UsersServiceImpl implements UsersService {
 
     private final ModelMapper modelMapper;
-
+    private final LawRepository lawRepository;
     private final UsersRepository usersRepository;
 
-    public UsersServiceImpl(ModelMapper modelMapper, UsersRepository usersRepository) {
+    public UsersServiceImpl(ModelMapper modelMapper, LawRepository lawRepository, UsersRepository usersRepository) {
         this.modelMapper = modelMapper;
+        this.lawRepository = lawRepository;
         this.usersRepository = usersRepository;
     }
 
@@ -39,11 +47,24 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UsersDTO create(UsersDTO newsDTO) {
-        newsDTO.setId(null);
+    public UsersDTO create(UsersDTO userDTO) {
+        Long l= 3L;
+       // Law law = new Law();
+        userDTO.setId(null);
+        Optional<Law> readerLaw = lawRepository.findById(l);
+
         Users resultUsers =   usersRepository.save(
-               modelMapper.map(newsDTO,Users.class)); //egylépésben alakítja át entityvé és menti el
-        return modelMapper.map(resultUsers,UsersDTO.class);
+               modelMapper.map(userDTO,Users.class)); //egylépésben alakítja át entityvé és menti el
+
+        //System.out.println(law.getUsers().size());
+        UsersDTO usersDTO = modelMapper.map(resultUsers,UsersDTO.class);
+        if (readerLaw.isPresent())
+        {
+            readerLaw.get().getUsers().add(resultUsers);
+            lawRepository.save(readerLaw.get());
+            //System.out.println("titel "+readerLaw.get().getTitle());
+        }
+        return usersDTO;
     }
 
     @Override
@@ -85,6 +106,22 @@ public class UsersServiceImpl implements UsersService {
         }
         else {throw new EntityNotFoundException("User");}
     }
+
+    @Override
+    public void addComment(CommentDTO commentDTO) {
+        Comment comment = modelMapper.map(commentDTO,Comment.class);
+        Optional<UsersDTO> optionalUsersDTO = findById(commentDTO.getWriter().getId());
+        if(optionalUsersDTO.isPresent()){
+            Users user = modelMapper.map (optionalUsersDTO.get(), Users.class);
+            List<Comment> comments = user.getComments();
+            comments.add(comment);
+            user.setComments(comments);
+        }
+        else{
+            throw new EntityNotFoundException("user");
+        }
+    }
+
     public UsersDTO findUserByChatName(String username) {
         System.out.println(username);
         Optional<Users> optionalUser = usersRepository.findUserByEmail(username);

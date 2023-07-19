@@ -1,8 +1,11 @@
 package com.example.hirportal01.dto;
 
+//import com.example.hirportal01.entity.Comment;
+//import com.example.hirportal01.entity.Law;
 import com.example.hirportal01.entity.Comment;
 import com.example.hirportal01.entity.Law;
 import com.example.hirportal01.entity.News;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 import javax.persistence.Column;
@@ -14,19 +17,14 @@ import java.util.List;
 public class UsersDTO {
     private Long Id;
 
-    public String getEmail() {
-        return email;
-    }
-@Column(unique = true, nullable = false)
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    private List<News> news;
     @NotBlank
     private String email;
     @NotBlank
     private String password;
-    @NotBlank
+
+    private  String imagePath;
+
     private String chatName;
     @NotBlank
     private String firstName;
@@ -34,12 +32,36 @@ public class UsersDTO {
     private String secName;
     private List<News> likes;
     //@JsonBackReference
-    //private List<Law> laws;
+    private List<Law> laws;
+
+
+    public List<News> getNews() {
+        return news;
+    }
+
+    public void setNews(List<News> news) {
+        this.news = news;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     private List<Comment> comments;
 
     private Date birthDay;
     public UsersDTO() {
+    }
+    public String getEmail() {
+        return email;
+    }
+    @Column(unique = true, nullable = false)
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Comment> getComments() {
@@ -105,12 +127,18 @@ public class UsersDTO {
         this.likes = likes;
     }
 
-//    public List<Law> getLaws() {
-//        return laws;
-//    }
-//
-//    public void setLaws(List<Law> laws) {
-//        this.laws = laws;
-//    }
+    public List<Law> getLaws() {
+        return laws;
+    }
 
+    public void setLaws(List<Law> laws) {
+        this.laws = laws;
+    }
+    public String lawsToString(){
+        StringBuilder result= new StringBuilder();
+        for (Law laws:this.laws){
+            result.append(laws.getTitle()).append(" ");
+        }
+        return result.toString();
+    }
 }

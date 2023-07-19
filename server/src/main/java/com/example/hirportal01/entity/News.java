@@ -1,13 +1,11 @@
 package com.example.hirportal01.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 public class News {
@@ -17,17 +15,20 @@ public class News {
     @Column(columnDefinition = "text")
     private String text;
 
-    private Date releaseDate;
-    @ManyToMany(mappedBy = "likes")
+    private Date releasedate;
+    @ManyToMany
+    @JoinTable(name = "user_news_likes",
+            joinColumns = @JoinColumn(name = "news_id"),
+            inverseJoinColumns = @JoinColumn(name = "users_id"))
     @JsonBackReference
-    private List<Users> likes;
+    private Set<Users> likes;
 
     @ManyToMany
     @JoinTable(name = "news_type",
             joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "type_id"))
     @JsonBackReference
-    private Set<TypeOfNews> type;
+    private Set<TypeOfNews> types;
 
     @OneToMany(mappedBy = "news")
     @JsonBackReference
@@ -39,24 +40,34 @@ public class News {
     private Users   writer;
     @Column(columnDefinition = "text")
     private String imgPath;
+
+    private String subtitle;
     private String title;
     public News() {
     }
 
-    public Date getReleaseDate() {
-        return releaseDate;
+    public Date getReleasedate() {
+        return releasedate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setReleasedate(Date releasedate) {
+        this.releasedate = releasedate;
     }
 
-    public Set<TypeOfNews> getType() {
-        return type;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public void setType(Set<TypeOfNews> type) {
-        this.type = type;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public Set<TypeOfNews> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<TypeOfNews> types) {
+        this.types = types;
     }
 
     public Long getId() {
@@ -99,11 +110,11 @@ public class News {
         this.title = title;
     }
 
-    public List<Users> getLikes() {
+    public Set<Users> getLikes() {
         return likes;
     }
 
-    public void setLikes(List<Users> likes) {
+    public void setLikes(Set<Users> likes) {
         this.likes = likes;
     }
 

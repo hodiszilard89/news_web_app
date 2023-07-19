@@ -3,6 +3,7 @@ package com.example.hirportal01.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class Comment {
     @JoinColumn(name = "news_id")
     //@JsonBackReference
     private News news;
+    @Column(columnDefinition = "text")
     private String text;
 
     public Long getId() {

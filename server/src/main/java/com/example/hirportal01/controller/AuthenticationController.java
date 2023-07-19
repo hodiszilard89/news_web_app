@@ -26,9 +26,10 @@ public class AuthenticationController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+        System.out.println(authenticationRequest.toString());
         UsersDTO usersDTO=
         usersService.findUser(authenticationRequest.getUsername(),authenticationRequest.getPassword());
-        return jwtUtil.createAndSignToken(usersDTO.getChatName(),"ADMIN");
+        return jwtUtil.createAndSignToken(usersDTO.getChatName(), usersDTO.lawsToString(), usersDTO.getId());
     }
 
     private void authenticateUser(AuthenticationRequest authenticationRequest) {

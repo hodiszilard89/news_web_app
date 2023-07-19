@@ -1,10 +1,10 @@
 package com.example.hirportal01.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
 
 
 @Entity
@@ -16,8 +16,12 @@ public class Law {
     private String title;
 
 
-    @ManyToMany(mappedBy = "laws")
-    private List<Users> users;
+    @ManyToMany
+    @JoinTable(name = "user_laws",
+            joinColumns = @JoinColumn(name = "law_id"),
+            inverseJoinColumns = @JoinColumn(name = "users_id"))
+    @JsonBackReference
+    private Set<Users> users;
 
     public Law() {
     }
@@ -38,11 +42,11 @@ public class Law {
         this.title = title;
     }
 
-    public List<Users> getUsers() {
+    public Set<Users> getUsers() {
         return users;
     }
 
-    public void setUsers(List<Users> users) {
+    public void setUsers(Set users) {
         this.users = users;
     }
 }
