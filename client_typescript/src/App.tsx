@@ -1,31 +1,36 @@
 import * as React from "react";
-import { Button as ChakratButton } from "@chakra-ui/react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { MyCarousel } from "./componens/alap-comp/my-carousel";
-import { Route, Routes, Router, BrowserRouter } from "react-router-dom";
-import { useNewsList } from "./store/hooks/use-news-list";
-import { HomePage } from "./componens/page/home-page";
-import NewsEditor from "./componens/page/add-news/add-news";
-import Login from "./login/login";
 
-import { RegisterPage } from "./componens/page/login/regist";
-// import NewsEditor from "./componens/page/edit";
-import { News } from "./componens/page/singlenews/news";
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+
+import { HomePage } from "./componens/home-page";
+
+import { NewsDescProvider } from "./componens/page/singlenews/news-desc-provider";
+import { NewsEditorProvider } from "./componens/page/edit-news/news-editor-provides";
+import LoginModal from "./componens/page/login/login-modal";
+import { LoginProvider } from "./componens/page/login/login-provider";
+import { Proba } from "./componens/page/proba";
+import RegModal from "./componens/page/regist/reg-modal";
 
 export const App = () => {
-  const { isLoading, isFetching, newsData } = useNewsList({});
   //console.log(response);
   return (
-    <div>
+    <React.StrictMode>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/edit" element={<NewsEditor />} />
-          <Route path="/news/:id" element={<News />} />
+
+          {/* <Route path="/register" element={<RegisterPage />} /> */}
+          <Route path="/edit" element={<NewsEditorProvider />} />
+          <Route path="/edit/:id" element={<NewsEditorProvider />} />
+          <Route path="/news/:id" element={<NewsDescProvider />} />
+          <Route path="/login" element={<LoginModal />} />
+          <Route path="/proba" element={<Proba />} />
         </Routes>
+        <LoginProvider />
+        <RegModal />
       </BrowserRouter>
-    </div>
+    </React.StrictMode>
   );
 };

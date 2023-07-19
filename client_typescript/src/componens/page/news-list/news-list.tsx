@@ -1,20 +1,25 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState, useMemo } from "react";
 import { Grid, GridItem, ListItem, OrderedList } from "@chakra-ui/react";
 import { useNewsList } from "../../../store/hooks/use-news-list";
 
 import { GetNewsQueryParams } from "../../../store/news/news-api";
 import { NewsListItem } from "./news-list-item";
-import { News } from "../../../models/news";
+import { News } from "../../../models";
 
-interface NewsListItemProps {
-  news: News[];
-}
-
-export const NewsList: FC<NewsListItemProps> = ({ news }) => {
+export const NewsList: FC = () => {
   let query: GetNewsQueryParams;
+  const [newsDataState, setNewsDataState] = useState<News[]>();
   query = {};
   const { newsData } = useNewsList(query);
-  //console.log();
+  //const { newsData } = useNewsList(query);
+
+  const data = useMemo(() => newsData, [newsData]);
+
+  useEffect(() => {
+    console.log(data);
+    setNewsDataState(data);
+  }, [data]);
+
   return (
     <Grid
       as={OrderedList}
@@ -26,11 +31,12 @@ export const NewsList: FC<NewsListItemProps> = ({ news }) => {
         margin: 0,
       }}
     >
-      {newsData.map((news) => (
-        <GridItem as={ListItem} key={news.id}>
-          <NewsListItem key={news.id} news={news} />
-        </GridItem>
-      ))}
+      {newsDataState &&
+        newsDataState.map((news) => (
+          <GridItem as={ListItem} key={news.id}>
+            <NewsListItem key={news.id} news={news} />
+          </GridItem>
+        ))}
     </Grid>
   );
 };
