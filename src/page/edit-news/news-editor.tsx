@@ -36,6 +36,7 @@ export const NewsEditor: FC<NewsEditorProps> = ({ onSubmit, id }) => {
   const [updateNews, setUpdateNews] = useState(useSelector(selectNews));
   //const [formikNews, setformikNews] = useState<News>(newsFactory(updateNews));
 
+  console.log(id);
 
   //useEffect(()=>{setUpdateNews(createRawNews())},[])
 
@@ -53,16 +54,6 @@ export const NewsEditor: FC<NewsEditorProps> = ({ onSubmit, id }) => {
       },
       validationSchema: newsEditValidationSchema,
     });
-
-
-    useEffect(() => {
-
-
-      return () => {
-      
-        //dispatch(setNews(createRawNews()));
-      };
-    }, [ setValues,updateNews]);
 
   return (
     <>

@@ -9,7 +9,7 @@ interface AuthUserState{
 }
 
 const initialState:AuthUserState={
-    user:undefined,
+    user:createUser(),
     token:""
 }
 

@@ -8,12 +8,12 @@ import { stat } from 'fs';
 
 interface NewsState {
     news:RawNews[],
-    id?:number,
+    typeId?:number,
 }
 
 const initialState:NewsState = {
     news : [],
-    id:-1,
+    typeId:-1,
 }
 
 export const newsSlice = createSlice({
@@ -25,10 +25,10 @@ export const newsSlice = createSlice({
             action:PayloadAction<RawNews[]>)=>{
                 state.news=[...action.payload];
             },
-        setNewsId:(
+        setNewsTypeId:(
             state:NewsState,
             action:PayloadAction<number>)=>{
-                state.id=action.payload;
+                state.typeId=action.payload;
             },
         updateNewsItem:(
             state:NewsState,
@@ -40,9 +40,9 @@ export const newsSlice = createSlice({
     
     }
 })
-export const {setNews,setNewsId,updateNewsItem} = newsSlice.actions;
+export const {setNews,setNewsTypeId,updateNewsItem} = newsSlice.actions;
 export const newsSliceReducer = newsSlice.reducer;
 export const newsSlicePath = newsSlice.name;
 
 export const selectNews = (state:RootState)=>state.newsSlice.news;
-export const selectId = (state:RootState)=>state.newsSlice.id;
+export const selectTypeId = (state:RootState)=>state.newsSlice.typeId;

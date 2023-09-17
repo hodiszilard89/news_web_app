@@ -26,7 +26,7 @@ import { useAuthUser, useSignOut, useAuthHeader } from "react-auth-kit";
 import { setNews as setEditNews } from "../../../store/news/editor-slice";
 
 import { selectLogin, showLogin } from "../../../store/news/login-slice";
-import { setNews, setNewsId } from "../../../store/news/news-slice";
+import { setNews, setNewsTypeId } from "../../../store/news/news-slice";
 
 import { selectAuthUser } from "../../../store/news/auth-user-slice";
 // import AuthService from "../../../login-auth/auth-service";
@@ -54,6 +54,7 @@ export const MyNavbar: FC = () => {
   //-------------------------------------
 
   const auth = useAuthUser();
+
   //newsByType?console.log("newsByTypes",newsByType):console.log("nemműkszik");
   const authUser = auth();
   //  useEffect(()=>{dispatch(setNewsId(-1))},[])
@@ -142,7 +143,7 @@ export const MyNavbar: FC = () => {
               className="fs-5"
               as={Link}
               onClick={() => {
-                dispatch(setNewsId(-1));
+                dispatch(setNewsTypeId(-1));
                 //setId(-1)
               }}
               to="/"
@@ -174,7 +175,7 @@ export const MyNavbar: FC = () => {
                           <NavDropdown.Item
                             to={`#action${key}`}
                             onClick={() => {
-                              dispatch(setNewsId(item.id));
+                              dispatch(setNewsTypeId(item.id));
                             }}
                             key={key}
                           >

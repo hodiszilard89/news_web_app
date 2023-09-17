@@ -17,7 +17,7 @@ import { selectAuthUser, setUser } from "../../store/news/auth-user-slice";
 import { useAuthUser } from "react-auth-kit";
 import { useGetUser } from "../../store/hooks/use-get-user";
 
-import {selectId, updateNewsItem} from "../../store/news/news-slice"
+import {selectTypeId, updateNewsItem} from "../../store/news/news-slice"
 import { selectNewsId } from "../../store/news/editor-slice";
 import { createRawNews } from "../../utils/create-raw-news";
 

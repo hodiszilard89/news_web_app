@@ -15,6 +15,7 @@ import {
 } from "../../store/news/auth-user-slice";
 import { User } from "../../models/user";
 import { createUser } from "../../utils/create-user";
+import { setNewsTypeId } from "../../store/news/news-slice";
 
 export interface NewsListItemProps {
   news: News;
@@ -22,16 +23,22 @@ export interface NewsListItemProps {
 }
 
 export const NewsListItem: FC<NewsListItemProps> = ({ news,  stateId }) => {
+
+  //const newsTypeId = useSelector(setNewsTypeId)
+
   
+
   const dispach = useDispatch();
   const auth = useAuthUser();
   const authUser = auth();
+
+
   const { user, token } = useSelector(selectAuthUser);
   const [loggedUser, setLoggedUser] = useState<User>(createUser());
 
-  const onClick = () => {
-    dispach(setNews(serializNews(news)));
-  };
+  const onClick = useCallback(() => {
+    dispach(setNews(serializNews(news)))},[]);
+  
 
   useCallback(() => user && setLoggedUser(user), []);
   const menu = useCallback(() => {
@@ -43,8 +50,8 @@ export const NewsListItem: FC<NewsListItemProps> = ({ news,  stateId }) => {
           //sx={style.menu}
           
           stateId={stateId}
-          newsId={news.id!}
-          news={news!}
+          // newsId={news.id!}
+          // news={news!}
           placement="bottom-end"
         />
       );
@@ -68,7 +75,7 @@ export const NewsListItem: FC<NewsListItemProps> = ({ news,  stateId }) => {
     <Card>
       {menu()}
       <Card.Body>
-      <Link to={`/news/${news.id}`}>
+      <Link to={`/news/${stateId}`}>
         <Card.Title>
           <h4>
             <b>{news.title}</b>

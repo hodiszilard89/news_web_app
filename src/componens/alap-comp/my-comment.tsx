@@ -1,14 +1,18 @@
+import { MyTimeFormat } from "./my-time.-format";
 import React, { FC } from "react";
 import { Card, ListGroup } from "react-bootstrap";
 
 interface CommentProps {
+  key:number;
   authorImage: string;
   author: string;
   date: Date;
   text: string;
 }
 
+
 export const Comment: FC<CommentProps> = ({
+  key,
   author,
   date,
   text,
@@ -31,8 +35,9 @@ export const Comment: FC<CommentProps> = ({
           />
           {author}
           <section style={{ fontSize: "14px" }}>
-            {new Date(Number(new Date()) - Number(new Date(date))).getMinutes()}
-            {"    "}percel ezelőtt.
+             <MyTimeFormat key={Math.random()} date={new Date(date)}></MyTimeFormat> 
+
+           
           </section>
         </Card.Header>
       </h4>

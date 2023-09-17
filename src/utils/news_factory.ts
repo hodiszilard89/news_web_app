@@ -36,10 +36,11 @@ export const newsFactory = (rawNewsData: RawNews|null) => {
       }
     };
 
-  // export const serializeComment = (comment: Comment): RawComment => {
+  export const serializeComment = (comment: Comment): RawComment => {
 
-  //   return {
-  //     ...comment,
-  //     releasedate: comment.releasedate.toISOString(),
-  //   }
-  // };
+    return {
+      ...comment,
+      releasedate: comment.releasedate.toISOString().split("T")[0],
+    }
+  };
+

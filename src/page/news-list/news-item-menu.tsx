@@ -12,6 +12,7 @@ import {
   useDisclosure,
   useMultiStyleConfig,
 } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 import React, { useCallback, VFC } from "react";
 import { useDispatch } from "react-redux";
 import { useNewsChancages } from "../../store/hooks/use-news-chancages";
@@ -19,12 +20,13 @@ import { setNews, showEditor, setId } from "../../store/news/editor-slice";
 import { serializNews } from "../../utils/news_factory";
 import { News } from "../../models";
 import { useNavigate } from "react-router-dom";
+import { selectNews } from "../../store/news/news-slice";
 
 export interface MovieItemMenuProps
   extends BoxProps,
     Pick<MenuProps, "placement" | "offset"> {
-  news: News;
-  newsId:number
+ // news: News;
+  //newsId:number
   //onDelete: () => void;
   stateId:number;
 }
@@ -32,8 +34,8 @@ export interface MovieItemMenuProps
 export const NewsItemMenu: FC<MovieItemMenuProps> = ({
   placement,
   offset = [0, -32],
-  news: news,
-  newsId,
+  // news: news,
+  // newsId,
   stateId,
   //onDelete: onDelete,
   ...props
@@ -42,6 +44,8 @@ export const NewsItemMenu: FC<MovieItemMenuProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const style = useMultiStyleConfig("MovieItemMenu", {});
   const { deleteNews } = useNewsChancages();
+
+  const news = useSelector(selectNews)[stateId]
 
   // const onDeleteHandel = useCallback(() => {
   //   onDelete();
@@ -60,7 +64,7 @@ export const NewsItemMenu: FC<MovieItemMenuProps> = ({
 
   const onEdit = useCallback(() => {
     //console.log("fut alakítani kíván news news formában", news);
-    dispatch(setNews(serializNews(news)));
+    dispatch(setNews(news));
     //3 helyről is kapja a state ID-t
     dispatch(setId(stateId))
     dispatch(showEditor(stateId));

@@ -17,7 +17,7 @@ export const CommentList: FC<CommentListProps> = ({ comments }) => {
             key={id}
             authorImage={comment.writer && comment.writer.imagePath}
             author={comment.writer?.chatName}
-            date={comment && comment.releaseDate}
+            date={comment && comment.releasedate}
             text={comment.text}
           />
         );

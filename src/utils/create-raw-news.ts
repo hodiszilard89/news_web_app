@@ -4,7 +4,7 @@ import { Type } from "../models/type";
 export const createRawNews = (): RawNews => ({
 
   title: "új raw hír",
-  releasedate: "",
+  releasedate: new Date().toISOString().split("T")[0],
   subtitle:"",
   imgPath:"",
   text:"",

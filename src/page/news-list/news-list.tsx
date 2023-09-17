@@ -6,7 +6,7 @@ import { GetNewsQueryParams } from "../../store/news/news-api";
 import { NewsListItem } from "./news-list-item";
 import { News, RawNews } from "../../models";
 import { useDispatch, useSelector } from "react-redux";
-import { selectId, selectNews, setNews } from "../../store/news/news-slice";
+import { selectTypeId, selectNews, setNews } from "../../store/news/news-slice";
 import { useGetNewsByType } from "../../store/hooks/use-get-news-by-type";
 import { serializNews } from "../../utils/news_factory";
 import { newsFactory } from "../../utils/news_factory";
@@ -14,7 +14,7 @@ import { newsFactory } from "../../utils/news_factory";
 
 export const NewsList: FC = () => {
   let query: GetNewsQueryParams;
-  const [newsDataState, setNewsDataState] = useState<News[]>();
+  const [newsDataState, setNewsDataState] = useState<RawNews[]>();
   query = {};
    const [id, setId] = useState<number>(0);
   //const { newsData } = useNewsList(query);
@@ -22,11 +22,12 @@ export const NewsList: FC = () => {
   const dispatch = useDispatch();
   //const data:News[] = useMemo(() => newsData, [newsData]);
 
-  const idFromState = useSelector(selectId);
+  const idFromState = useSelector(selectTypeId);
 
   
 
-  const globalStateNews = useSelector(selectNews);
+  //const globalStateNews = useSelector(selectNews);
+  //news lekérdezés szervertől
   const {news} = useGetNewsByType(id);
   const data = useMemo(() => news, [news]);
   // useEffect(()=>{
@@ -43,7 +44,7 @@ export const NewsList: FC = () => {
     //NEM KELL EZ A SOR MERT NEM INNNEN ÁLLÍTOM!!!!!!!!!!!!!!
     //dispatch(setNews(data))
     setId(idFromState!)
-    data&&setNewsDataState(data);
+    data&&setNewsDataState(data.map(serializNews));
     data&&dispatch(setNews(data.map(serializNews)))
   }, [data,idFromState]);
  // useEffect(()=>{console.log("newsdataState ",newsDataState)},[newsDataState])
@@ -60,8 +61,8 @@ export const NewsList: FC = () => {
     >
       {
        // console.log(newsDataState);
-     // newsDataState &&
-        globalStateNews.map((news, id) => (
+      newsDataState &&
+     newsDataState.map((news, id) => (
           // <GridItem as={ListItem} key={news.id}>
           //   <NewsListItem key={news.id} news={news} />
           // </GridItem>
