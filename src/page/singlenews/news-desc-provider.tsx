@@ -19,66 +19,70 @@ import { User } from "../../models/user";
 import { useAuthHeader } from "react-auth-kit";
 import { useAuthUser } from "react-auth-kit";
 import { useGetUser } from "../../store/hooks/use-get-user";
+import { serializeComment } from "../../utils/news_factory";
 
 export const NewsDescProvider: FC = () => {
   const dispatch = useDispatch();
   const { id } = useParams<"id">();
   const authHeader = useAuthHeader();
-  const auth = useAuthUser();
-  const authUserInStorage = auth();
+//   const auth = useAuthUser();
+//   const authUserInStorage = auth();
+// console.log(authUserInStorage);
 
+const auth = useAuthUser();
+const authUserInStorage = auth();
+const { isLoading, user } = useGetUser(
+  authUserInStorage && authUserInStorage.userId
+);
   const [authUser, setAuthUser] = useState<User>();
 
-  const { isLoading, user: userFromServer } = useGetUser(
-    authUserInStorage && authUserInStorage.userId
-  );
+  // const { isLoading, user: userFromServer } = useGetUser(
+  //   authUserInStorage && authUserInStorage.userId
+  // );
 
   useEffect(() => {
-    setAuthUser(userFromServer);
+    setAuthUser(user);
 
    // console.log("lefut");
-    dispatch(setUser(userFromServer));
-  }, [userFromServer, dispatch]);
+    dispatch(setUser(user));
+  }, [user, dispatch]);
 
-  //const { news, newsId, showEditor } = useSelector(selectEditor);
-  const { news } = useOneNews(Number(id));
+
   const { addComment } = useNewsChancages();
 
-  const { user } = useSelector(selectAuthUser);
-  //console.log("friss", user);
+
+  console.log("user from server",user)
+
   useEffect(() => {
-    //console.log("from useEffekt", user);
+
     setAuthUser(user);
   }, [user, authUser]);
-  //console.log("authUser", authUser);
-  // const response = await fetch(`${API_URL}/profile`, {
-  //   method: "GET",
-  //   headers: {
-  //     authorization: authToken ? `Bearer ${authToken}`:"",
-  //     "Content-Type": "application/json",
-  //     "accept": "application/json"
-  //   },
-  // });
-  //console.log('authuser: ',authUser);
+
   const onSubmit = useCallback(
+    
     async (comment: Comment) => {
-      comment.writer = authUser!;
+      console.log("comment", comment);
+      // console.log("comment", comment)
+      // console.log("szerializált kommnet",serializeComment(comment))
+      console.log("auth", authUser)
+      //comment.writer = !;
       //console.log(comment);
+     
       await fetch(`/comment`, {
         method: "POST",
         headers: {
           authorization: authHeader(),
-          "Content-Type": "application/json",
-          accept: "application/json",
+          "Content-Type": "text/plan",
+          accept: "text/plan",
         },
-        body: JSON.stringify(comment),
+        body: JSON.stringify(serializeComment(comment)),
       });
     },
     [authUser]
   );
   const comment = createComment();
-  news && (comment.news = news);
-  comment.writer = createUser();
+ // news && (comment.news = news);
+  comment.writer = user!;
   //végtelen ciklus
   //   useEffect(() => {
   //     if (selectedNews) {
@@ -87,8 +91,9 @@ export const NewsDescProvider: FC = () => {
   //   }, [selectedNews, dispatch]);
   return (
     <div>
-      {news && (
+      {(
         <NewsDescription
+        key={id}
           id={Number(id)}
           comment={comment}
           onSubmit={onSubmit}
