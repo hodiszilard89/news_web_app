@@ -1,9 +1,9 @@
-import { MyTimeFormat } from "./my-time.-format";
+import { MyTimeFormat } from "../alap-comp/my-time.-format";
 import React, { FC } from "react";
 import { Card, ListGroup } from "react-bootstrap";
 
 interface CommentProps {
-  key:number;
+ // key:number;
   authorImage: string;
   author: string;
   date: Date;
@@ -12,7 +12,7 @@ interface CommentProps {
 
 
 export const Comment: FC<CommentProps> = ({
-  key,
+  
   author,
   date,
   text,
@@ -35,7 +35,7 @@ export const Comment: FC<CommentProps> = ({
           />
           {author}
           <section style={{ fontSize: "14px" }}>
-             <MyTimeFormat key={Math.random()} date={new Date(date)}></MyTimeFormat> 
+             <MyTimeFormat key={Math.random()} date={new Date(date)}/>
 
            
           </section>

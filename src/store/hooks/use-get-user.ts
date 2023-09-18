@@ -20,8 +20,7 @@ export const useGetUser = (userId : User["id"]) => {
 
     return {
         isLoading: isLoading || (!data && isFetching),
-        error,
-        user
-        //news: data?? data,
+        error,  
+        data,
       };
 }

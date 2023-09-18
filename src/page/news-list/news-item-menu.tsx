@@ -26,7 +26,7 @@ export interface MovieItemMenuProps
   extends BoxProps,
     Pick<MenuProps, "placement" | "offset"> {
  // news: News;
-  //newsId:number
+ //newsId:number
   //onDelete: () => void;
   stateId:number;
 }
@@ -35,7 +35,7 @@ export const NewsItemMenu: FC<MovieItemMenuProps> = ({
   placement,
   offset = [0, -32],
   // news: news,
-  // newsId,
+   //newsId,
   stateId,
   //onDelete: onDelete,
   ...props
@@ -56,9 +56,10 @@ export const NewsItemMenu: FC<MovieItemMenuProps> = ({
   const onDelete = useCallback(async () => {
     if (window.confirm("Are you sure you want to delete this news?")) {
       // newsId && onDelete(newsId);
+      console.log(news.id);
       await deleteNews(news.id!);
     }
-  }, [deleteNews]);
+  }, [deleteNews, news]);
 
   
 

@@ -23,7 +23,7 @@ export const MyTimeFormat: FC<MyTimeFormatParams> = ({ date }) => {
   } else if (minute > 0) {
     return <>{minute} percel ezelőtt</>;
   } else if (secund > 0) {
-    return <>{secund} másod percel ezelőtt</>;
+    return <>{secund} másodpercel ezelőtt</>;
   }
   return <div>éppen most</div>;
 };

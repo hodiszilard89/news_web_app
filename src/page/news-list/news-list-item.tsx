@@ -46,22 +46,19 @@ export const NewsListItem: FC<NewsListItemProps> = ({ news,  stateId }) => {
     if (authUser !== null && authUser.role.includes("ADMIN")) {
       return (
         <NewsItemMenu
-          //onDelete={onDelete}
-          //sx={style.menu}
-          
+
           stateId={stateId}
-          // newsId={news.id!}
-          // news={news!}
+          //newsId={news.id!}
           placement="bottom-end"
         />
       );
     }
     return <></>;
-  }, [authUser]);
+  }, [authUser, stateId]);
 
   const userDidLike = async () => {
     const newLikes = user && [...user?.likes, news];
-    //console.log(newLikes);
+
     await setLoggedUser((prevState) => ({
       ...prevState,
       likes: newLikes ? newLikes : [],
@@ -75,6 +72,8 @@ export const NewsListItem: FC<NewsListItemProps> = ({ news,  stateId }) => {
     <Card>
       {menu()}
       <Card.Body>
+        {news.id} 
+        {stateId}
       <Link to={`/news/${stateId}`}>
         <Card.Title>
           <h4>

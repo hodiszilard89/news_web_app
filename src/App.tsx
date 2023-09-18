@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 
-import { HomePage } from "./componens/home-page";
+import { HomePage } from "./page/home-page";
 
 import { NewsDescProvider } from "./page/singlenews/news-desc-provider";
 import { NewsEditorProvider } from "./page/edit-news/news-editor-provides";

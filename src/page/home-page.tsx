@@ -1,11 +1,11 @@
 import React, { FC, useEffect, useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
-import { MyCarousel } from "./alap-comp/my-carousel";
+import { MyCarousel } from "../componens/alap-comp/my-carousel";
 import { Container } from "react-bootstrap";
 
-import { NewsList } from "../page/news-list/news-list";
+import { NewsList } from "./news-list/news-list";
 import { setUser } from "../store/news/auth-user-slice";
-import MyNavbar from "./alap-comp/navbar/navbar";
+import MyNavbar from "../componens/alap-comp/navbar/navbar";
 import { useDispatch } from "react-redux";
 
 import { useAuthUser } from "react-auth-kit";
@@ -21,16 +21,17 @@ export const HomePage: FC = () => {
   const auth = useAuthUser();
   const authUserInStorage = auth();
 
-  const [authUser, setAuthUser] = useState<User>();
+  const [authUser, setMyAuthUser] = useState<User>();
 
-  const { isLoading, user } = useGetUser(authUserInStorage?.userId);
-  //if (!isLoading) console.log(user);
+  const { isLoading, data } = useGetUser(authUserInStorage?.id);
+ 
   useEffect(() => {
-    setAuthUser(user);
+    setMyAuthUser(data);
+    console.log(authUser);
     // dispach(setNews(news));
 
-    dispach(setUser(user));
-  }, [user, dispach, authUser]);
+    dispach(setUser(data));
+  }, [data]);
 
   return (
     <>

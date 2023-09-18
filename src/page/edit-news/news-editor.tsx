@@ -15,8 +15,11 @@ import { useFormik } from "formik";
 import { GenreSelector } from "../../componens/alap-comp/genre-selector";
 import { Box, Image } from "@chakra-ui/react";
 import { setNews } from "../../store/news/editor-slice";
+import { useGetUser } from "../../store/hooks/use-get-user";
 import { newsEditValidationSchema } from "./news-edit-validation.schema";
+import { useAuthUser } from "react-auth-kit";
 import { newsFactory } from "../../utils/news_factory";
+import {User} from "../../models/user"
 import { createNews } from "../../utils/create-news";
 import { createRawNews } from "../../utils/create-raw-news";
 
@@ -28,17 +31,30 @@ export interface NewsEditorProps {
 export const NewsEditor: FC<NewsEditorProps> = ({ onSubmit, id }) => {
   const dispatch = useDispatch();
 
+
+  const auth = useAuthUser();
+  const authUserInStorage = auth();
+
+  const {  data } = useGetUser(authUserInStorage?.id);
+  console.log("szervertől érkező response: \n",useGetUser(
+    authUserInStorage?.id
+ ));
+  const [authUser, setMyAuthUser] = useState<User>();
+
+  useEffect(() => {
+    
+    data&&setMyAuthUser(data);
+    console.log("effect lefut  \n user", data, "   authUser ", authUser)
+  }, [data, setMyAuthUser]);
+
   const { isLoading, error, types } = useNewsTypes();
 
   const { id: pathID } = useParams<"id">();
 
   //lekérem a globális stateből a szerkesztendő hírt
   const [updateNews, setUpdateNews] = useState(useSelector(selectNews));
-  //const [formikNews, setformikNews] = useState<News>(newsFactory(updateNews));
 
-  console.log(id);
 
-  //useEffect(()=>{setUpdateNews(createRawNews())},[])
 
   const { errors, values, setFieldValue, handleSubmit, handleReset, setValues } =
     useFormik({
@@ -46,6 +62,7 @@ export const NewsEditor: FC<NewsEditorProps> = ({ onSubmit, id }) => {
       onSubmit: async (values: News, { setSubmitting }) => {
         try {
           const validatedNews = { ...values };
+          validatedNews.writer=data
           //validatedNews.releasedate = new Date();
           await onSubmit(id!, validatedNews);
         } catch (e) {
