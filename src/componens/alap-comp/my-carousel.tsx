@@ -1,90 +1,80 @@
-import {
-  Button as StrapButton,
-  Carousel,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
-
-import { Flex, Box } from "@chakra-ui/react";
+import { Button as StrapButton, Carousel, Row, Col } from "react-bootstrap";
+import { Link as ChakraLink, useMultiStyleConfig } from "@chakra-ui/react";
+import { Flex, Box, background, Text, Image } from "@chakra-ui/react";
 import { FC } from "react";
+import { setNews } from "../../store/news/editor-slice";
+import {News} from "../../models/news"
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { selectPrioritis } from "../../store/news/news-slice";
+import { NewsDescProvider } from "../../page/singlenews/news-desc-provider";
+import { serializNews } from "../../utils/news_factory";
 
-export const MyCarousel:FC = () => {
-  const whiteShadow = {
-    
-    textShadow: '2px 2px 4px rgba(255, 200, 12, 0.9)',
-    color: 'white',
-};
+
+interface MyCaruselProps{
+  arr:News[]
+}
+
+export const MyCarousel: FC<MyCaruselProps> = ({arr}) => {
+ // const prioritis = useSelector(selectPrioritis);
+  const dispatch = useDispatch();
+  const style = useMultiStyleConfig("CaroselLabel", {});
+
   return (
-    <>
-      <Row className={"mb-3"}>
-        <Col md={8}>
-          <Carousel indicators={false} variant="dark" data-interval="1000">
-            {/* {items.map((item, id) => ( */}
-            <Carousel.Item
-              key={2}
-              className="mb-3"
-              style={{
-                marginBlockStart: "20px",
-              }}
-            >
-              <img
-                className="d-block w-100"
-                src="https://picsum.photos/800/400?text=Slide+1"
-                alt="First slide"
-              />
-              <Carousel.Caption
-                className="text-start ps-3"
-                style={{
-                  fontSize: "18px",
-
-                  height: "100px",
-                  padding: "10px",
-                }}
+    <Row className={""}>
+      <Col md={8}>
+        <Box sx={{ padding: "5%" }}>
+          <Carousel indicators={false}>
+            {arr.map((news, id) => (
+              <Carousel.Item
+                key={id}
+                //className="mb-3"
+                style={
+                  {
+                    // marginBlockStart: "20px",
+                  }
+                }
               >
-                <h3
-                   style={
-                    whiteShadow
-                   } 
-                >asdasdasdasd</h3>
-                <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item
-              key={3}
-              className="mb-3"
-              style={{
-                marginBlockStart: "20px",
-              }}
-            >
-              <img
-                className="d-block w-100"
-                src="https://picsum.photos/800/400?text=Slide+2"
-                alt="First slide"
-              />
-              <Carousel.Caption
-                className="text-start ps-3   "
-                style={{
-                  outline: "1px solid back",
-                  fontSize: "18px",
+                <Image
+                  sx={style.image}
+                  //className="d-block w-100"
+                  src="https://picsum.photos/1100/600?text=Slide+2"
+                  alt="First slide"
+                />
+                <Carousel.Caption
+                  className="text-start ps-3   "
+                  style={{
+                    outline: "1px solid back",
+                    fontSize: "24px",
 
-                  height: "100px",
-                  padding: "10px",
-                }}
-              >
-                <h3>asdasdasdasd</h3>
-                <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p>
-              </Carousel.Caption>
-            </Carousel.Item>
-            {/* ))} */}
+                    height: "100px",
+                    padding: "10px",
+                  }}
+                >
+                  <Box position={"absolute"} w={"450px"}>
+                    {/* <Text onClick={()=>(<NewsDescProvider news={news}/>)}>proba</Text> */}
+                    <ChakraLink
+                      as={Link}
+                      to={`/news/0`}
+                      backgroundColor={"rgba( 0, 0, 0, 0.5)"}
+                     // onClick={() => dispatch(setNews(news))}
+                     onClick={()=>(dispatch(setNews(serializNews(news))))}
+                    >
+                      {news.title}
+                    </ChakraLink>
+                  </Box>
+
+                  {/* <br />
+                <Text mt={2} sx={style.proba}>
+                  sdasdfasfasdfasdfasdf
+                </Text> */}
+                </Carousel.Caption>
+              </Carousel.Item>
+            ))}
           </Carousel>
-        </Col>
-        <Col md={4}></Col>
-      </Row>
-    </>
+        </Box>
+      </Col>
+      <Col md={4}></Col>
+    </Row>
   );
 };

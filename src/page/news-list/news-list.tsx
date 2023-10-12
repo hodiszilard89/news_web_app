@@ -6,70 +6,68 @@ import { GetNewsQueryParams } from "../../store/news/news-api";
 import { NewsListItem } from "./news-list-item";
 import { News, RawNews } from "../../models";
 import { useDispatch, useSelector } from "react-redux";
-import { selectTypeId, selectNews, setNews } from "../../store/news/news-slice";
+import {
+  selectTypeId,
+  selectNews,
+  setNews,
+  setPriorityNews,
+} from "../../store/news/news-slice";
 import { useGetNewsByType } from "../../store/hooks/use-get-news-by-type";
 import { serializNews } from "../../utils/news_factory";
 import { newsFactory } from "../../utils/news_factory";
-
+import { selectSearchText } from "../../store/news/search-slice";
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 
 export const NewsList: FC = () => {
   let query: GetNewsQueryParams;
   const [newsDataState, setNewsDataState] = useState<RawNews[]>();
   query = {};
-   const [id, setId] = useState<number>(0);
-  //const { newsData } = useNewsList(query);
-  //const [ news ] = useGetNewsByType(0);
+  const [id, setId] = useState<number>(-1);
+
   const dispatch = useDispatch();
-  //const data:News[] = useMemo(() => newsData, [newsData]);
-
+  const text = useSelector(selectSearchText);
+  console.log("search text", text)
   const idFromState = useSelector(selectTypeId);
+  const { news, isLoading, isFetching } = useGetNewsByType(id);
+  //const data = useMemo(() => news, [news]);
 
-  
-
-  //const globalStateNews = useSelector(selectNews);
-  //news lekérdezés szervertől
-  const {news} = useGetNewsByType(id);
-  const data = useMemo(() => news, [news]);
-  // useEffect(()=>{
-   //const {news as news2} = useSelector(selectNews);
-  // },[id])
-  //const data= useMemo(() => news, [news]);
-  //const data:News[]=[]
+  const prioritis = news?.filter((news) => news.priority);
  
-  //console.log("news ",news)
-   
-  //console.log("data ",data)
+
+  useEffect(()=>{setId(idFromState!)},[idFromState])
   useEffect(() => {
-    //console.log("változik");
-    //NEM KELL EZ A SOR MERT NEM INNNEN ÁLLÍTOM!!!!!!!!!!!!!!
-    //dispatch(setNews(data))
-    setId(idFromState!)
-    data&&setNewsDataState(data.map(serializNews));
-    data&&dispatch(setNews(data.map(serializNews)))
-  }, [data,idFromState]);
- // useEffect(()=>{console.log("newsdataState ",newsDataState)},[newsDataState])
+    
+   
+    if (!text)
+          {news && setNewsDataState(news.map(serializNews))
+            news && dispatch(setNews(news.map(serializNews)))}
+          else
+          {setNewsDataState(news?.filter((news)=>(news.title.includes(text))).map(serializNews))
+            news && dispatch(setNews(news?.filter((news)=>(news.title.includes(text))).map(serializNews)))}
+    
+    prioritis && dispatch(setPriorityNews(prioritis.map(serializNews)));
+  }, [news, dispatch, id, text]);
+  // useEffect(()=>{console.log("newsdataState ",newsDataState)},[newsDataState])
+  console.log("news Data State,",newsDataState);
   return (
-    <Grid
-      as={OrderedList}
-      templateColumns="repeat(4, 1fr)"
-      sx={{
-        gap: 12,
-        listStyleType: "none",
-        padding: 0,
-        margin: 0,
-      }}
-    >
-      {
-       // console.log(newsDataState);
-      newsDataState &&
-     newsDataState.map((news, id) => (
-          // <GridItem as={ListItem} key={news.id}>
-          //   <NewsListItem key={news.id} news={news} />
-          // </GridItem>
-          <GridItem as={ListItem} key={id}>
-            <NewsListItem key={id} stateId={id} news={newsFactory(news)} />
-          </GridItem>
-        ))}
-    </Grid>
+
+        <Grid
+          as={OrderedList}
+          templateColumns="repeat(4, 1fr)"
+          sx={{
+            gap: 12,
+            listStyleType: "none",
+            padding: 0,
+            margin: 0,
+          }}
+        >
+          {newsDataState &&
+            newsDataState.map((news, id) => (
+              <GridItem as={ListItem} key={id}>
+                <NewsListItem key={news.id} stateId={id} news={newsFactory(news)} />
+              </GridItem>
+            ))}
+        </Grid>
+    
   );
 };

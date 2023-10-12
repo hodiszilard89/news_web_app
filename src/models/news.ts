@@ -9,6 +9,7 @@ export interface News {
     subtitle:string,
     releasedate:Date;
     title:string,
+    priority:boolean,
     writer?:User,
     types?:Type[],
     likes?:User[],

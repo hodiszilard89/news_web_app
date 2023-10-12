@@ -1,29 +1,26 @@
 import React, { FC, useState, useCallback, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { decodeJwt } from "jose";
+import { FormErrorMessage } from "@chakra-ui/react";
 import axios from "axios";
-import { Modal, Form, Button, Container } from "react-bootstrap";
+import { User } from "../../models/user";
+import { Modal, Form, Button, Container, FormLabel } from "react-bootstrap";
 import { closeLogin, selectLogin } from "../../store/news/login-slice";
-import { showReg, selectReg } from "../../store/news/reg-slice";
+import { showReg } from "../../store/news/reg-slice";
 import { useFormik } from "formik";
-//import AuthService from "../../../login-auth/auth-service"; // kikommentelve az osztály
+import { useAuthUser } from "react-auth-kit";
 import { useSignIn } from "react-auth-kit";
-//import { selectLogin } from "../../../store/news/login-slice";
+import { useGetUser } from "../../store/hooks/use-get-user";
+import { setUser } from "../../store/news/auth-user-slice";
 import { useGetToken } from "../../store/hooks/use-get-token";
 import { GetTokenQueryParams } from "../../store/news/news-api";
 export interface Token {
   role: string;
   iss: string;
-  username: string;
+  email: string;
   id: number;
 }
 
-// interface initialToken{
-//   role:"",
-//   iss:"",
-//   username:"",
-//   id:0
-// }
 interface LoginModalParam {
   onSubmit: (param: GetTokenQueryParams) => {};
 }
@@ -33,11 +30,11 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
   const initialToken: Token = {
     role: "",
     iss: "",
-    username: "",
+    email: "",
     id: 0,
   };
   const initParam: GetTokenQueryParams = {
-    username: "",
+    email: "",
     password: "",
   };
 
@@ -50,57 +47,57 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
   const [tokenParams, setTokenParams] =
     useState<GetTokenQueryParams>(initParam);
 
-  //maga a token
-  //const [token, setToken] = useState<string>("");
+  const dispach = useDispatch();
+ const [responseErrors, setResponseErrors] = useState<string|undefined>(undefined)
+  const auth = useAuthUser();
+  const authUserInStorage = auth();
 
-  //token lekérés a szervertől
+  const [authUser, setMyAuthUser] = useState<User>();
+
+  const { isLoading: Loading, data } = useGetUser(authUserInStorage?.id);
+
+  useEffect(() => {
+    setMyAuthUser(data);
+    console.log(authUser);
+    // dispach(setNews(news));
+
+    dispach(setUser(data));
+  }, [data]);
+
   const { serverErrors, isLoading, isFetching, tokenValue } =
     useGetToken(tokenParams);
+
+    // const { serverErrors, isLoading, isFetching, tokenValue } = tokenParams
+    // ? useGetToken(tokenParams)
+    // : { serverErrors: null, isLoading: false, isFetching: false, tokenValue: null };
+
+    console.log(serverErrors);
   useEffect(() => {
-    console.log("lefut a submit");
     if (tokenValue) {
-      //setToken(tokenValue)
-  
-      if (tokenValue) {
-        const { role, id } = decodeJwt(tokenValue) as unknown as Token;
-        tokenValue &&
-          singIn({
-            token: tokenValue,
-            expiresIn: 36000,
-            tokenType: "Bearer",
-            authState: { email: values.email, role, id },
-          });
-      }
+      const { role, id } = decodeJwt(tokenValue) as unknown as Token;
+
+      //ALKALMAZÁSON BELÜLI FH BEÁLLÍTÁS A LOCALSTOREBA
+      tokenValue &&
+        singIn({
+          token: tokenValue,
+          expiresIn: 36000,
+          tokenType: "Bearer",
+          authState: { email: values.email, role, id },
+        });
+        dispatch(closeLogin());
+      // globál stateba rakni a frlhasználót
     } else {
-      //  console.log("server Error", serverErrors?.data.messages);
+      setResponseErrors(serverErrors?.data.messages)
+      console.log("server Error", serverErrors?.data);
     }
   }, [tokenValue, tokenParams]);
 
-  // useEffect(() => {
-  //   //lefut a token regisztráció
-  //   console.log("lefut a token regisztrálás");
-  //   if (tokenValue) {
-  //     const { role, id } = decodeJwt(tokenValue) as unknown as Token;
-  //     tokenValue &&
-  //       singIn({
-  //         token: tokenValue,
-  //         expiresIn: 36000,
-  //         tokenType: "Bearer",
-  //         authState: { email: values.email, role, id },
-  //       });
-  //   }
-  // }, [tokenValue]);
-
   //FORMIK RÉSZ
-  const { errors, values, setFieldValue, handleSubmit } = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
+  const { errors, values, setFieldValue, handleSubmit, setValues} = useFormik({
+    initialValues: tokenParams,
     onSubmit: async (values, { setSubmitting }) => {
-
       await setTokenParams({
-        username: values.email,
+        email: values.email,
         password: values.password,
       });
       //onSubmit(param)
@@ -152,38 +149,61 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
       //   token: response.data,
       // });
 
-      dispatch(closeLogin());
+      //dispatch(closeLogin());
     },
   });
 
   const onOpenReg = useCallback(() => {
-    dispatch(showReg());
     dispatch(closeLogin());
+    dispatch(showReg());
 
     //dispatch(showReg());
   }, []);
 
   const onClose = useCallback(() => {
     dispatch(closeLogin());
+    setResponseErrors(undefined)
+    //setValues({email:"", password:""})
   }, [dispatch]);
 
-  useEffect(() => setShowModal(showLogin), [showLogin]);
+  useEffect(() => {
+    setShowModal(showLogin);
+  }, [showLogin]);
+
+  useEffect(() => {
+    // return () => {
+    //   dispach(closeLogin());
+    // };
+  });
 
   return (
     <Container>
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        onExit={() => {
+          console.log("bezásás");
+          dispach(closeLogin());
+        }}
+      >
+       
         <Modal.Header closeButton onClick={onClose}>
           <Modal.Title>Bejelentkezés</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form as="form" onSubmit={handleSubmit}>
+       
+          <Form as="form" onSubmit={handleSubmit} >
+            <FormLabel>{responseErrors?`Error ${responseErrors}`:""}</FormLabel>
             <Form.Group controlId="formEmail">
               <Form.Label>Email</Form.Label>
               <Form.Control
                 //type="email"
-                autoComplete="email"
+                type="text"
+                
                 placeholder="Adja meg az email címét"
                 value={values.email}
+                autoComplete="new-email"
                 onChange={(event) => setFieldValue("email", event.target.value)}
               />
             </Form.Group>
@@ -192,7 +212,7 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
               <Form.Label>Jelszó</Form.Label>
               <Form.Control
                 type="password"
-                autoComplete="password"
+                autoComplete="new-password"
                 placeholder="Adja meg a jelszavát"
                 value={values.password}
                 onChange={(event) =>
@@ -203,7 +223,7 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
             <Button
               onClick={() => {
                 setTokenParams({
-                  username: values.email,
+                  email: values.email,
                   password: values.password,
                 });
               }}

@@ -7,4 +7,5 @@ export * from "./movie-form";
 export * from "./movie-item-menu";
 export * from "./movie-list-item.stlye";
 export * from "./page-header.style";
+export * from "./carosel-label.style"
 

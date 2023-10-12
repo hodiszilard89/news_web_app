@@ -9,6 +9,7 @@ export const createNews = (): News=>({
     imgPath:"",
     text:"új hír",
     subtitle:"",
+    priority:false,
     title:"",
     types:[] as Type[],
     releasedate:new Date(),

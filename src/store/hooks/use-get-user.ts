@@ -16,7 +16,7 @@ export const useGetUser = (userId : User["id"]) => {
            (data),
         [data]);
   
-        
+ 
 
     return {
         isLoading: isLoading || (!data && isFetching),

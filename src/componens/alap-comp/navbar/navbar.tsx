@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown, FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Container from "react-bootstrap/Container";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FC,
   useCallback,
@@ -11,7 +11,13 @@ import {
   useEffect,
   useLayoutEffect,
 } from "react";
-import { Skeleton, Button, useMultiStyleConfig } from "@chakra-ui/react";
+
+import {
+  Skeleton,
+  Button,
+  useMultiStyleConfig,
+  position,
+} from "@chakra-ui/react";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -28,21 +34,25 @@ import { setNews as setEditNews } from "../../../store/news/editor-slice";
 import { selectLogin, showLogin } from "../../../store/news/login-slice";
 import { setNews, setNewsTypeId } from "../../../store/news/news-slice";
 
-import { selectAuthUser } from "../../../store/news/auth-user-slice";
+import {
+  selectAuthUser,
+  selectOnlineUser,
+} from "../../../store/news/auth-user-slice";
 // import AuthService from "../../../login-auth/auth-service";
 import { setUser, outUser } from "../../../store/news/auth-user-slice";
 import { UserMenu } from "./user_menu";
 import { useGetNewsByType } from "../../../store/hooks/use-get-news-by-type";
 import { Type } from "../../../models/type";
 import { createRawNews } from "../../../utils/create-raw-news";
-
+import { setEditUser } from "../../../store/news/users-slice";
+import { setSearchText } from "../../../store/news/search-slice";
 
 export const MyNavbar: FC = () => {
   const { searchQuery, onChange, onSubmit } = useHeaderSearch();
   const { isLoading, error, types } = useNewsTypes();
   const style = useMultiStyleConfig("MovueItemMenu", {});
   const singOut = useSignOut();
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [id, setId] = useState<number>(-1);
   //const {  news:newsByType } = useGetNewsByType(id);
@@ -54,10 +64,15 @@ export const MyNavbar: FC = () => {
   //-------------------------------------
 
   const auth = useAuthUser();
+  const user = useSelector(selectOnlineUser);
 
-  //newsByType?console.log("newsByTypes",newsByType):console.log("nemműkszik");
+  useEffect(() => {
+    console.log(user);
+    user&&dispatch(setEditUser(user))
+  }, [user]);
+
   const authUser = auth();
-  //  useEffect(()=>{dispatch(setNewsId(-1))},[])
+
   const addNews = useCallback(() => {
     if (
       authUser !== null &&
@@ -88,8 +103,6 @@ export const MyNavbar: FC = () => {
 
   const openLogin = useCallback(() => {
     dispatch(showLogin());
-    //console.log("sadfasdf");
-    //kiir();
   }, []);
 
   const kiir = useCallback(() => {
@@ -99,6 +112,9 @@ export const MyNavbar: FC = () => {
 
         {authUser ? (
           <UserMenu
+            showProfile={ () => {
+              navigate("/user");
+            }}
             onExit={() => {
               singOut();
               dispatch(outUser());
@@ -122,7 +138,7 @@ export const MyNavbar: FC = () => {
   }, [authUser]);
 
   const openEditor = useCallback(() => {
-    dispatch(setEditNews(createRawNews()))
+    dispatch(setEditNews(createRawNews()));
     //dispatch(showEditor());
   }, []);
 
@@ -131,7 +147,7 @@ export const MyNavbar: FC = () => {
     <div>
       {["md"].map((expand) => (
         <Navbar
-          sticky="top"
+          style={{ position: "sticky", zIndex:1}}
           key={expand}
           bg="light"
           expand={expand}
@@ -144,6 +160,7 @@ export const MyNavbar: FC = () => {
               as={Link}
               onClick={() => {
                 dispatch(setNewsTypeId(-1));
+                dispatch(setSearchText(""));
                 //setId(-1)
               }}
               to="/"
@@ -187,7 +204,8 @@ export const MyNavbar: FC = () => {
                   </Skeleton>
 
                   {addNews()}
-                  {usersList()}
+
+                  { user?.laws?.find((law)=>law.title==="ADMIN")?usersList():""}
                 </Nav>
                 <>
                   <Form as="form" className="d-flex " onSubmit={onSubmit}>

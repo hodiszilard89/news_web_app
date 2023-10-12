@@ -35,4 +35,4 @@ export const regModalPath = regModalSlice.name;
 export const regModalReducer = regModalSlice.reducer;
 
 export const selectShowReg = (state: RootState) => state.regModal.showReg;
-export const selectReg = (state: RootState) => state.regModal;
+// export const selectReg = (state: RootState) => state.regModal;

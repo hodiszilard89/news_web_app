@@ -9,7 +9,7 @@ interface AuthUserState{
 }
 
 const initialState:AuthUserState={
-    user:createUser(),
+    user:undefined,
     token:""
 }
 
@@ -53,4 +53,5 @@ export const  {setUser,outUser,setToken} = authUserSlice.actions;
 export const authUserReducer = authUserSlice.reducer;
 export const authUserPath = authUserSlice.name;
 
+export const selectOnlineUser = (state:RootState) => state.authUser.user;
 export const selectAuthUser = (state:RootState) => state.authUser;

@@ -6,6 +6,7 @@ import { loginModalPath, loginModalReducer } from "./news/login-slice"
 import { authUserPath, authUserReducer } from "./news/auth-user-slice"
 import { regModalPath, regModalReducer } from "./news/reg-slice"
 import { newsSliceReducer, newsSlicePath } from "./news/news-slice"
+import {usesSlicePath, usesSliceReducer} from "./news/users-slice"
 //import { securityPath, securityReducer } from "./security/security-api"
 
  
@@ -17,6 +18,7 @@ import { newsSliceReducer, newsSlicePath } from "./news/news-slice"
     [loginModalPath]: loginModalReducer,
     [regModalPath]:regModalReducer,
     [newsSlicePath]:newsSliceReducer, 
+    [usesSlicePath] : usesSliceReducer,
     authUser:authUserReducer,
  }) 
 

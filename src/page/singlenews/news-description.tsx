@@ -1,74 +1,65 @@
-import React,{ FC, useState, useEffect, useCallback} from "react";
+import React, { FC, useState, useEffect, useCallback } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import { Image, Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useOneNews } from "../../store/hooks/use-one-news";
 
 import MyNavbar from "../../componens/alap-comp/navbar/navbar";
-import {User} from "../../models/user"
+import { User } from "../../models/user";
 import { useAuthUser } from "react-auth-kit";
 import { useFormik } from "formik";
 import { useMultiStyleConfig } from "@chakra-ui/react";
 import { Comment } from "../../models/comment";
-import { useDispatch, useSelector} from "react-redux"; 
+import { useDispatch, useSelector } from "react-redux";
 import { CommentList } from "../../componens/comment-list/comment-list";
-import { Link} from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
-import { selectNews, setNewsTypeId } from "../../store/news/news-slice"; 
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { setNewsTypeId } from "../../store/news/news-slice";
+import { selectNews } from "../../store/news/editor-slice";
 import { newsFactory, serializNews } from "../../utils/news_factory";
 import { useGetUser } from "../../store/hooks/use-get-user";
+import { selectAuthUser } from "../../store/news/auth-user-slice";
+import {News} from '../../models/news'
+import { isUndefined } from "util";
 
 export interface NewsDescProps {
   comment: Comment;
   id: number;
+  news?: News;
   onSubmit: (comment: Comment) => Promise<void>;
 }
 
 export const NewsDescription: FC<NewsDescProps> = ({
-  comment, 
+  comment,
   onSubmit,
   id,
+  news
 }) => {
-  const navigate=useNavigate();
-  const dispatch=useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const style = useMultiStyleConfig("GenresLable", {});
-  
-  const [user, setUser] = useState<User>();
-  const auth = useAuthUser();
-  const authUser = auth();
+ 
+  const user = useSelector(selectAuthUser).user;
 
- // console.log(authUser)
-  const {isLoading, data : userFromServer} = useGetUser(authUser?.id)
+  const newsFromState = newsFactory(useSelector(selectNews));
+  useEffect(() => {
+    if (!newsFromState.id) navigate("/");
+  }, []);
 
- // console.log("userFromServer", userFromServer)
-  useEffect(()=>{
-    setUser(userFromServer)
-  },[userFromServer])
-
-
-
-  const news= newsFactory(useSelector(selectNews)[id])
- useEffect(()=>{
-  if (!news.id) navigate('/')
- },[news.id])
-
- // console.log(news)
-  //const { news } = useOneNews(Number(id));
   const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
-    news?.comments && setComments(news.comments);
-    
+    newsFromState?.comments && setComments(newsFromState.comments);
   }, []);
   const { values, setFieldValue, handleSubmit, resetForm } = useFormik({
     initialValues: comment,
-    
+
     onSubmit: async (values: Comment, { setSubmitting }) => {
       resetForm();
-      comment.releasedate=new Date();
-      values.news=serializNews(news)
+      comment.releasedate = new Date();
+      values.news = serializNews(newsFromState);
 
-      values.writer=user!;
-      if (authUser !== null) {
+      values.writer = user!;
+      if (user !== undefined) {
         try {
           setComments([...comments, values]);
 
@@ -78,7 +69,6 @@ export const NewsDescription: FC<NewsDescProps> = ({
         }
       } else {
         window.confirm("Jelentkezz be!");
-        
       }
     },
     validationSchema: null,
@@ -87,31 +77,33 @@ export const NewsDescription: FC<NewsDescProps> = ({
   return (
     <Container>
       <MyNavbar />
-      <Row> 
+      <Row>
         <Col>
           <Image
             style={{ width: "600px", height: "400px" }}
-            src={news?.imgPath ? news?.imgPath : ""}
+            src={newsFromState?.imgPath ? newsFromState?.imgPath : ""}
             fluid
             rounded
             className="mb-3"
           />
           <Box maxWidth={"550px"}>
-            {news?.types?.map((type, id) => {
-            
+            {newsFromState?.types?.map((type, id) => {
               return (
                 <Link to="/" key={id}>
-                  <Text sx={style.tag} key={id}
-                  onClick={()=>dispatch(setNewsTypeId(type.id))}>
+                  <Text
+                    sx={style.tag}
+                    key={id}
+                    onClick={() => dispatch(setNewsTypeId(type.id))}
+                  >
                     #{type.title}
                   </Text>
                 </Link>
               );
             })}
           </Box>
-          <p>{<small>Szerző: {news && news.writer?.chatName}</small>}</p>
-          <h2>{news?.title}</h2>
-          <section style={{ fontSize: "18px" }}>{news?.text}</section>
+          <p>{<small>Szerző: {newsFromState && newsFromState.writer?.chatName}</small>}</p>
+          <h2>{newsFromState?.title}</h2>
+          <section style={{ fontSize: "18px" }}>{newsFromState?.text}</section>
           {/* <pre>{news?.text}</pre> */}
           <Button variant="primary" className="mr-2">
             Tetszik

@@ -11,10 +11,10 @@ export const useGetNewsByType =  (typeId:Type["id"])=>{
       const select = newsApi.endpoints.getNewsByType.select(typeId );
       const { data } = useSelector(select);
     
-      const news = useMemo(
-        ()=>
-           data ,
-        [data]);
+      // const news = useMemo(
+      //   ()=>
+      //      data ,
+      //   [data]);
     
       // console.log("getnewsbytype",data);
       // console.log("isLoading",isLoading);
@@ -22,9 +22,10 @@ export const useGetNewsByType =  (typeId:Type["id"])=>{
       //const user = data as User;
      
       return {
-        isLoading: isLoading || (!data && isFetching),
+        isLoading,
+        isFetching,
         error,
-        news
+        news:data
         //news: data?? data,
       };
     // const {isLoading,isFetching, error} = useGetNewsByTypeQuery(typeId,{skip:!typeId});

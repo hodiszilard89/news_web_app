@@ -12,7 +12,7 @@ export interface Token {
   }
 
 export const useGetToken = (params:GetTokenQueryParams)=>{
-    const {isLoading,isFetching, error}=useGetTokenQuery(params)
+    const {isLoading,isFetching, error}=useGetTokenQuery(params, {skip:params.email==""})
     
     const select = newsApi.endpoints.getToken.select(params);
     const {data} = useSelector(select);

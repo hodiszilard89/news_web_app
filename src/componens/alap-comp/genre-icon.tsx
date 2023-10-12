@@ -18,6 +18,7 @@ export const GenreIcon: FC<GenreIconParmas> = ({
   const genreList = Object.values(Genre);
 
   const style = useMultiStyleConfig("GenresLable", {});
+  console.log("genre stílus", style.tag)
   return (
     <Text sx={style.tag}>
       {value}

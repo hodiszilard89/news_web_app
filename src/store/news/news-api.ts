@@ -5,6 +5,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 
+import { Like } from "../../models/like";
 import { User } from "../../models/user";
 import { Comment } from "../../models/comment";
 import { RawNews, News } from "../../models";
@@ -15,7 +16,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { Type } from "../../models/type";
 import { Token } from "../../models/token";
 
-import { BaseQueryApi, BaseQueryFn } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import {
+  BaseQueryApi,
+  BaseQueryFn,
+} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import { HexBase64BinaryEncoding } from "crypto";
+
+interface updateParam {
+  user:User,
+  image:string
+}
 
 interface customError {
   data: {
@@ -37,7 +47,7 @@ export interface GetNewsResponse {
   releasedate: Date;
 }
 export interface GetTokenQueryParams {
-  username: string;
+  email: string;
   password: string;
 }
 export interface GetNewsQueryParams {
@@ -54,6 +64,7 @@ export interface GetNewsQueryParams {
 export const storage = window.localStorage;
 const newsTag: string = "NEWS";
 const userTag: string = "USER";
+const commentTag: string = "COMMENT";
 export const newsApi = createApi({
   reducerPath: "newsPath",
   baseQuery: fetchBaseQuery({
@@ -66,7 +77,7 @@ export const newsApi = createApi({
       }
       return headers;
     },
-  }) as BaseQueryFn<string | FetchArgs, unknown, customError,{}>,
+  }) as BaseQueryFn<string | FetchArgs, unknown, customError, {}>,
   tagTypes: [newsTag, userTag],
 
   endpoints: (builder) => ({
@@ -79,7 +90,7 @@ export const newsApi = createApi({
           Accept: "application/json",
         },
         body: {
-          username: params.username,
+          username: params.email,
           password: params.password,
         },
       }),
@@ -120,7 +131,6 @@ export const newsApi = createApi({
       }),
     }),
     getUsers: builder.query<User[], void>({
-      
       query: () => ({
         url: "/users",
       }),
@@ -138,6 +148,8 @@ export const newsApi = createApi({
       query: (userId: User["id"]) => ({
         url: `/users/${userId}`,
       }),
+      providesTags:[{type: userTag, id: "LIST"}], 
+      
     }),
     getTypes: builder.query<Type[], void>({
       query: () => ({
@@ -169,18 +181,46 @@ export const newsApi = createApi({
       }),
       invalidatesTags: [{ type: newsTag, id: "LIST" }],
     }),
-    updateUser: builder.mutation<User, User>({
-      query: (user: User) => ({
+
+    checkUniqueEmail:builder.query<boolean,string>({
+      query:(email:string)=>({
+        url:"/user/checkemail",
+        method:"GET",
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          Accept: "text/plain; charset=utf-8",
+        },
+        body:JSON.stringify({email:{email}})
+      })
+    }),
+
+    uploadImage:builder.mutation<void,string>({
+      query: (image: string) => ({
+        url: "news/uploadimage",
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          Accept: "text/plain; charset=utf-8",
+        },
+
+        //{image:image} a szerverszámára
+        body: image,
+      }),
+    }),
+    updateUser: builder.mutation<void, updateParam>({
+      query: ({user, image}) => ({
         url: "/users",
         method: "PUT",
         headers: {
           "Content-Type": "application/json; charset=utf-8",
           Accept: "application/json; charset=utf-8",
         },
-        body: user,
-      }),
-      invalidatesTags: [{ type: userTag, id: "LIST" }],
+        body: JSON.parse(JSON.stringify({usersDTO:user,image:image})),
+        invalidatesTags:[{ type: userTag, id:user.id}]
+     // invalidatesTags: [{ type: userTag, id: user.id }],
     }),
+    invalidatesTags: [{ type: userTag, id: "LIST" }],
+  }),
     deleteNews: builder.mutation<void, number>({
       query: (newsId: number) => ({
         url: `/news/${newsId}`,
@@ -216,11 +256,11 @@ export const newsApi = createApi({
         url: "/users",
         method: "POST",
         headers: {
-          "Content-Type": "text/plain; charset=utf-8",
-          accept: "text/plain; charset=utf-8",
+          "Content-Type": "application/json; charset=utf-8",
+          accept: "application/json; charset=utf-8",
         },
 
-        body: JSON.stringify(user),
+        body: JSON.parse(JSON.stringify(user)),
       }),
     }),
     addComment: builder.mutation<void, Comment>({
@@ -236,7 +276,26 @@ export const newsApi = createApi({
 
         body: JSON.stringify(comment),
       }),
+      invalidatesTags: [{ type: newsTag, id: "LIST" }],
     }),
+    addLike: builder.mutation<void, Like>({
+      //első paraméter amit visszakapunk 2. amit küldünk
+
+      query: (like: Like) => ({
+        url: "news/addlike",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "text/plain; charset=utf-8",
+        },
+
+        body: like,
+      }),
+
+      invalidatesTags:[{ type: userTag, id:"LIST"}, {type:newsTag, id:"LIST"}]
+    }),
+
+
     // addUser: builder.mutation<User, User>({
     //   //első paraméter amit visszakapunk 2. amit küldünk
     //   query: (user: User) => ({
@@ -253,6 +312,7 @@ export const newsApi = createApi({
   }),
 });
 
+export const useCheckUniqueEmail = newsApi.endpoints.checkUniqueEmail.useQuery;
 export const useGetTokenQuery = newsApi.endpoints.getToken.useQuery;
 export const useGetTypesQuery = newsApi.endpoints.getTypes.useQuery;
 export const useGetUsersQuery = newsApi.endpoints.getUsers.useQuery;
@@ -263,6 +323,9 @@ export const useGetOneNewsQuery = newsApi.endpoints.getOneNews.useQuery;
 export const useDeleteUserMutation = newsApi.endpoints.deleteUser.useMutation;
 export const useCreateCommentMutation =
   newsApi.endpoints.addComment.useMutation;
+export const useUploadImageMutation =
+  newsApi.endpoints.uploadImage.useMutation;
+export const useCreateLikeMutation = newsApi.endpoints.addLike.useMutation;
 export const useCreateUserMutation = newsApi.endpoints.createUser.useMutation;
 export const useCreateNewsMutaion = newsApi.endpoints.createNews.useMutation;
 export const useDeleteNewsMutaion = newsApi.endpoints.deleteNews.useMutation;

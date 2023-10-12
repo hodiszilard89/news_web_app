@@ -1,5 +1,6 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Link as rLink } from "react-router-dom";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   FormControl,
   FormLabel,
@@ -13,6 +14,7 @@ import {
   HStack,
   Input,
   Flex,
+  Icon,
 } from "@chakra-ui/react";
 //import {Form} from 'react-bootstrap'
 import { useFormik } from "formik";
@@ -21,6 +23,10 @@ import { useGetUser } from "../../store/hooks/use-get-user";
 import { User } from "../../models/user";
 import { Button } from "react-bootstrap";
 import { useUserChancages } from "../../store/hooks/use-user-chancages";
+import { useSelector } from "react-redux";
+import { selectAuthUser } from "../../store/news/auth-user-slice";
+import { selectUser } from "../../store/news/users-slice";
+import { useUploadImageMutation } from "../../store/news/news-api";
 
 export interface UserDescProps {
   user: User;
@@ -28,19 +34,35 @@ export interface UserDescProps {
 }
 
 export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
+  const fileInput = document.getElementById("file-input");
+  //const file = fileInput?.files[0];
+  const reader = new FileReader();
+
+  // const [image, setImage] = useState<File>();
+  const [base64Image, setBase64Image] = useState("");
+  const [imgageUpload] = useUploadImageMutation();
+  const [viewPass, setViewPass] = useState<Boolean>(false);
   const { updateUser } = useUserChancages();
+  const viewer = useSelector(selectAuthUser).user;
   const { values, setFieldValue, handleSubmit } = useFormik({
     initialValues: user,
     onSubmit: async (values: User) => {
       try {
         const validatedValues = { ...values };
-        await updateUser(validatedValues);
-       
+        // await console.log("image",image);
+        await console.log("base64IMage", base64Image);
+        await imgageUpload(base64Image);
+        await updateUser({ user: validatedValues, image: base64Image });
       } catch (e) {
         console.error(e);
       }
     },
   });
+
+  const onClickViewIcon = () => {
+    setViewPass(!viewPass);
+  };
+  const [image, setImage] = useState<string>(user.imagePath);
   return (
     <>
       <Box
@@ -55,7 +77,7 @@ export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
             <Image
               style={{ height: 300, width: 300 }}
               borderRadius={"50%"}
-              src={user?.imagePath}
+              src={image}
               padding={3}
             />
           </GridItem>
@@ -86,112 +108,182 @@ export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
         as="form"
         onSubmit={handleSubmit}
       >
-        <FormControl>
-          <Grid pt={5} mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
-            <GridItem bg="">
-              <FormLabel textTransform={"none"}>Chatname</FormLabel>
-            </GridItem>
-            <GridItem bg="">
-              <Input
-                type="text"
-                value={values?.chatName}
-                onChange={(event) => {
-                  setFieldValue("chatName", event.target.value);
-                }}
-                //sx={style.inputField}
-              />
-            </GridItem>
-          </Grid>
-        </FormControl>
-        <FormControl>
-          <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
-            <GridItem bg="">
-              <FormLabel textTransform={"none"}>Firstname</FormLabel>
-            </GridItem>
-            <GridItem bg="">
-              <Input
-                value={values?.firstName}
-                onChange={(event) => {
-                  setFieldValue("firstName", event.target.value);
-                }}
-                //sx={style.inputField}
-              />
-            </GridItem>
-          </Grid>
-        </FormControl>
-        <FormControl>
-          <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
-            <GridItem bg="">
-              <FormLabel textTransform={"none"}>Lastname</FormLabel>
-            </GridItem>
-            <GridItem bg="">
-              <Input
-                value={values?.secName}
-                onChange={(event) => {
-                  setFieldValue("secName", event.target.value);
-                }}
-              />
-            </GridItem>
-          </Grid>
-        </FormControl>
-        <FormControl>
-          <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
-            <GridItem bg="">
-              <FormLabel textTransform={"none"}>Email</FormLabel>
-            </GridItem>
-            <GridItem bg="">
-              <Input
-                value={values?.email}
-                onChange={(event) => {
-                  setFieldValue("email", event.target.value);
-                }}
-                //sx={style.inputField}
-              />
-            </GridItem>
-          </Grid>
-        </FormControl>
-        <FormControl>
-          <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
-            <GridItem bg="">
-              <FormLabel textTransform={"none"}>Password</FormLabel>
-            </GridItem>
-            <GridItem bg="">
-              <Input
-                value={values?.password}
-                onChange={(event) => {
-                  setFieldValue("password", event.target.value);
-                }}
-                //sx={style.inputField}
-              />
-            </GridItem>
-          </Grid>
-        </FormControl>
-        <FormControl>
-          <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
-            <GridItem bg="">
-              <FormLabel textTransform={"none"}>Imagepath</FormLabel>
-            </GridItem>
-            <GridItem bg="">
-              <Input
-                type="text"
-                value={values?.imagePath}
-                onChange={(event) => {
-                  setFieldValue("imagePath", event.target.value);
-                }}
-                //sx={style.inputField}
-              />
-            </GridItem>
-          </Grid>
-        </FormControl>
+        <>
+          <FormControl
+            isDisabled={
+              !viewer?.laws?.find((law) => law.title === "ADMIN") &&
+              user.id !== viewer?.id
+            }
+          >
+            <Grid pt={5} mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
+              <GridItem bg="">
+                <FormLabel textTransform={"none"}>Chatname</FormLabel>
+              </GridItem>
+              <GridItem bg="">
+                <Input
+                  id={Math.random().toString()}
+                  value={values?.chatName}
+                  onChange={(event) => {
+                    setFieldValue("chatName", event.target.value);
+                  }}
+                  //sx={style.inputField}
+                />
+              </GridItem>
+            </Grid>
+            <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
+              <GridItem bg="">
+                <FormLabel textTransform={"none"}>Firstname</FormLabel>
+              </GridItem>
+              <GridItem bg="">
+                <Input
+                  id={Math.random().toString()}
+                  value={values?.firstName}
+                  onChange={(event) => {
+                    setFieldValue("firstName", event.target.value);
+                  }}
+                  //sx={style.inputField}
+                />
+              </GridItem>
+            </Grid>
+            <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
+              <GridItem bg="">
+                <FormLabel textTransform={"none"}>Lastname</FormLabel>
+              </GridItem>
+              <GridItem bg="">
+                <Input
+                  id={Math.random().toString()}
+                  value={values?.secName}
+                  onChange={(event) => {
+                    setFieldValue("secName", event.target.value);
+                  }}
+                />
+              </GridItem>
+            </Grid>
+            <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
+              <GridItem bg="">
+                <FormLabel textTransform={"none"}>Email</FormLabel>
+              </GridItem>
+              <GridItem bg="">
+                <Input
+                  id={Math.random().toString()}
+                  value={values?.email}
+                  onChange={(event) => {
+                    setFieldValue("email", event.target.value);
+                  }}
+                  //sx={style.inputField}
+                />
+              </GridItem>
+            </Grid>
+
+            {/* PASSWORD */}
+            <Grid
+              mb={5}
+              templateColumns="repeat(3, 1fr)"
+              gap={4}
+              display={user.id === viewer?.id ? undefined : "none"}
+              alignItems="center"
+            >
+              <GridItem bg="">
+                <FormLabel textTransform={"none"}>Password</FormLabel>
+              </GridItem>
+              <GridItem bg="">
+                <Input
+                  id={Math.random().toString()}
+                  type={viewPass ? "text" : "password"}
+                  value={values?.password}
+                  onChange={(event) => {
+                    setFieldValue("password", event.target.value);
+                  }}
+                  //sx={style.inputField}
+                />
+              </GridItem>
+              <GridItem>
+                {viewPass ? (
+                  <ViewIcon fontSize={"xl"} onClick={onClickViewIcon} />
+                ) : (
+                  <ViewOffIcon fontSize={"xl"} onClick={onClickViewIcon} />
+                )}
+              </GridItem>
+            </Grid>
+            {/* <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
+              <GridItem bg="">
+                <FormLabel textTransform={"none"}>Imagepath</FormLabel>
+              </GridItem>
+              <GridItem bg="">
+                <Input
+                  id={Math.random().toString()}
+                  value={values?.imagePath}
+                  onChange={(event) => {
+                    setFieldValue("imagePath", event.target.value);
+                  }}
+                  //sx={style.inputField}
+                />
+              </GridItem>
+            </Grid> */}
+            <Grid
+              mb={5}
+              templateColumns="repeat(3, 1fr)"
+              gap={4}
+              alignItems="center"
+            >
+              <GridItem bg="">
+                <FormLabel textTransform={"none"}>Imagepath</FormLabel>
+              </GridItem>
+              <GridItem bg="" alignItems="center">
+                <Input
+                  type="file"
+                  id="file-input"
+                  onChange={(event) => {
+                    const files = event.target.files;
+
+                    if (files && files.length > 0) {
+                      const file = files[0];
+                      setImage(URL.createObjectURL(file));
+                      // setImage(file)
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        const base64Image = reader.result
+                          ?.toString()
+                          .split(",")[1];
+                        setBase64Image(base64Image!);
+                        // console.log("render.result",reader.result)
+                      };
+                      //  console.log("render.result",reader.result)
+
+                      reader.readAsDataURL(file);
+                    }
+
+                    //setImage(file)
+                  }}
+                  // value={values?.imagePath}
+                  // onChange={(event) => {
+                  //   setFieldValue("imagePath", event.target.value);
+                  // }}
+                  //sx={style.inputField}
+                />
+              </GridItem>
+            </Grid>
+          </FormControl>
+        </>
 
         <Button type={"submit"} size={"lg"}>
           Küldés
         </Button>
-        <Link ms={4} as={rLink} to={"/users"}>
-          <Button size={"lg"}>Back to Users List</Button>
-        </Link>
+        {user.laws?.find((law) => law.title === "ADMIN") ? (
+          <>
+            <Link ms={4} as={rLink} to={"/users"}>
+              <Button size={"lg"}>Back to Users List</Button>
+            </Link>
+            <Link ms={4} as={rLink} to={"/"}>
+              <Button size={"lg"}>Főoldal</Button>{" "}
+            </Link>
+          </>
+        ) : (
+          <Link ms={4} as={rLink} to={"/"}>
+            <Button size={"lg"}>Főoldal</Button>{" "}
+          </Link>
+        )}
       </Box>
-      <Box></Box>
     </>
   );
 };

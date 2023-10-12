@@ -22,6 +22,7 @@ import { newsFactory } from "../../utils/news_factory";
 import {User} from "../../models/user"
 import { createNews } from "../../utils/create-news";
 import { createRawNews } from "../../utils/create-raw-news";
+import { selectAuthUser } from "../../store/news/auth-user-slice";
 
 export interface NewsEditorProps {
   id: News["id"];
@@ -32,24 +33,28 @@ export const NewsEditor: FC<NewsEditorProps> = ({ onSubmit, id }) => {
   const dispatch = useDispatch();
 
 
-  const auth = useAuthUser();
-  const authUserInStorage = auth();
+//   const auth = useAuthUser();
+//   const authUserInStorage = auth();
 
-  const {  data } = useGetUser(authUserInStorage?.id);
-  console.log("szervertől érkező response: \n",useGetUser(
-    authUserInStorage?.id
- ));
-  const [authUser, setMyAuthUser] = useState<User>();
+//   const {  data } = useGetUser(authUserInStorage?.id);
+//   console.log("szervertől érkező response: \n",useGetUser(
+//     authUserInStorage?.id
+//  ));
+//   const [authUser, setMyAuthUser] = useState<User>();
 
-  useEffect(() => {
+
+//MÓDOSÍTANI A SLICE CSAK A USER LEKÉRDETÉSÉSRE
+  const user = useSelector(selectAuthUser).user ;
+
+  // useEffect(() => {
     
-    data&&setMyAuthUser(data);
-    console.log("effect lefut  \n user", data, "   authUser ", authUser)
-  }, [data, setMyAuthUser]);
+  //   data&&setMyAuthUser(data);
+  //   console.log("effect lefut  \n user", data, "   authUser ", authUser)
+  // }, [data, setMyAuthUser]);
 
   const { isLoading, error, types } = useNewsTypes();
 
-  const { id: pathID } = useParams<"id">();
+
 
   //lekérem a globális stateből a szerkesztendő hírt
   const [updateNews, setUpdateNews] = useState(useSelector(selectNews));
@@ -60,14 +65,17 @@ export const NewsEditor: FC<NewsEditorProps> = ({ onSubmit, id }) => {
     useFormik({
       initialValues: newsFactory(updateNews),
       onSubmit: async (values: News, { setSubmitting }) => {
+        if (user){
         try {
           const validatedNews = { ...values };
-          validatedNews.writer=data
-          //validatedNews.releasedate = new Date();
+          validatedNews.writer=user
           await onSubmit(id!, validatedNews);
         } catch (e) {
           console.error(e);
         }
+      }else {
+        window.confirm("jelentkezz be");
+      }
       },
       validationSchema: newsEditValidationSchema,
     });
@@ -140,7 +148,7 @@ export const NewsEditor: FC<NewsEditorProps> = ({ onSubmit, id }) => {
             ) : (
               ""
             )}
-            <FormErrorMessage>{!!errors.types}</FormErrorMessage>
+            <FormErrorMessage>{errors.types}</FormErrorMessage>
           </FormControl>
           <Button variant="primary" type="submit">
             Submit
