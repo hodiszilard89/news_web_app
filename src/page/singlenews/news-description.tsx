@@ -1,11 +1,5 @@
-import React, { FC, useState, useEffect, useCallback } from "react";
-import { Box, Text } from "@chakra-ui/react";
-import { Image, Container, Row, Col, Form, Button } from "react-bootstrap";
-import { useOneNews } from "../../store/hooks/use-one-news";
-
-import MyNavbar from "../../componens/alap-comp/navbar/navbar";
-import { User } from "../../models/user";
-import { useAuthUser } from "react-auth-kit";
+import React, { FC, useState, useEffect } from "react";
+import { Box, Text, FormControl, Input, FormLabel, Button, Image } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { useMultiStyleConfig } from "@chakra-ui/react";
 import { Comment } from "../../models/comment";
@@ -16,9 +10,10 @@ import { useNavigate } from "react-router-dom";
 import { setNewsTypeId } from "../../store/news/news-slice";
 import { selectNews } from "../../store/news/editor-slice";
 import { newsFactory, serializNews } from "../../utils/news_factory";
-import { useGetUser } from "../../store/hooks/use-get-user";
+
 import { selectAuthUser } from "../../store/news/auth-user-slice";
-import {News} from '../../models/news'
+import { News } from "../../models/news";
+import { NewNavbar } from "../../componens/alap-comp/navbar/new-navbar";
 import { isUndefined } from "util";
 
 export interface NewsDescProps {
@@ -32,12 +27,12 @@ export const NewsDescription: FC<NewsDescProps> = ({
   comment,
   onSubmit,
   id,
-  news
+  news,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const style = useMultiStyleConfig("GenresLable", {});
- 
+
   const user = useSelector(selectAuthUser).user;
 
   const newsFromState = newsFactory(useSelector(selectNews));
@@ -73,70 +68,77 @@ export const NewsDescription: FC<NewsDescProps> = ({
     },
     validationSchema: null,
   });
+  console.log("news writer", news?.writer?.imagePath);
 
   return (
-    <Container>
-      <MyNavbar />
-      <Row>
-        <Col>
-          <Image
-            style={{ width: "600px", height: "400px" }}
-            src={newsFromState?.imgPath ? newsFromState?.imgPath : ""}
-            fluid
-            rounded
-            className="mb-3"
-          />
-          <Box maxWidth={"550px"}>
-            {newsFromState?.types?.map((type, id) => {
-              return (
-                <Link to="/" key={id}>
-                  <Text
-                    sx={style.tag}
-                    key={id}
-                    onClick={() => dispatch(setNewsTypeId(type.id))}
-                  >
-                    #{type.title}
-                  </Text>
-                </Link>
-              );
-            })}
-          </Box>
-          <p>{<small>Szerző: {newsFromState && newsFromState.writer?.chatName}</small>}</p>
-          <h2>{newsFromState?.title}</h2>
-          <section style={{ fontSize: "18px" }}>{newsFromState?.text}</section>
-          {/* <pre>{news?.text}</pre> */}
-          <Button variant="primary" className="mr-2">
-            Tetszik
-          </Button>
-          <Button variant="secondary">Megosztás</Button>
-        </Col>
-      </Row>
-      <Row className="mt-4">
-        <h4>Hozzászólások: ({comments.length})</h4>
-        {comments && <CommentList comments={comments} />}
-
-        <Form className="mt-3" as="form" onSubmit={handleSubmit}>
-          <Form.Group controlId="commentForm">
-            <Form.Label>
-              <h4>Írj egy kommentet</h4>
-              <section style={{ fontSize: "18px" }}></section>
-            </Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="Enter article content"
-              value={values.text}
-              onChange={(event) => {
-                setFieldValue("text", event.target.value);
-              }}
+    <Box margin={"auto"} w={"80%"}>
+      
+        <NewNavbar />
+        <Box>
+          <Box>
+            <Image
+              style={{ width: "600px", height: "400px" }}
+              src={newsFromState?.imgPath ? newsFromState?.imgPath : ""}
+              borderRadius={"3"}
+              className="mb-3"
             />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Küldés
-          </Button>
-        </Form>
-      </Row>
-    </Container>
+            <Box maxWidth={"550px"}>
+              {newsFromState?.types?.map((type, id) => {
+                return (
+                  <Link to="/" key={id}>
+                    <Text
+                      sx={style.tag}
+                      key={id}
+                      onClick={() => dispatch(setNewsTypeId(type.id))}
+                    >
+                      #{type.title}
+                    </Text>
+                  </Link>
+                );
+              })}
+            </Box>
+            <p>
+              {
+                <small>
+                  Szerző: {newsFromState && newsFromState.writer?.chatName}
+                </small>
+              }
+            </p>
+            <h2>{newsFromState?.title}</h2>
+            <section style={{ fontSize: "18px" }}>
+              {newsFromState?.text}
+            </section>
+          </Box>
+        </Box>
+        <Box width={"75%"}>
+          <h4>Hozzászólások: ({comments.length})</h4>
+          {comments && <CommentList comments={comments} />}
+
+          <form onSubmit={handleSubmit}>
+            <FormControl >
+              <FormLabel>
+                <h4>Írj egy kommentet</h4>
+                <section style={{ fontSize: "18px" }}></section>
+              </FormLabel>
+              <Input
+                h={"100"}
+                as="textarea"
+                backgroundColor={"white"}
+                rows={3}
+                placeholder="Enter article content"
+                value={values.text}
+                onChange={(event) => {
+                  setFieldValue("text", event.target.value);
+                }}
+              />
+            </FormControl>
+            <Button colorScheme='teal' variant='solid'size={"lg"} type="submit">
+              Küldés
+            </Button>
+          </form>
+        </Box>
+     
+    </Box>
   );
 
   // console.log(user);

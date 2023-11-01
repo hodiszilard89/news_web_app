@@ -16,10 +16,11 @@ interface MyCaruselProps{
 }
 
 export const MyCarousel: FC<MyCaruselProps> = ({arr}) => {
- // const prioritis = useSelector(selectPrioritis);
+//  // const prioritis = useSelector(selectPrioritis);
   const dispatch = useDispatch();
   const style = useMultiStyleConfig("CaroselLabel", {});
 
+  
   return (
     <Row className={""}>
       <Col md={8}>
@@ -38,7 +39,7 @@ export const MyCarousel: FC<MyCaruselProps> = ({arr}) => {
                 <Image
                   sx={style.image}
                   //className="d-block w-100"
-                  src="https://picsum.photos/1100/600?text=Slide+2"
+                  src={news.imgPath}
                   alt="First slide"
                 />
                 <Carousel.Caption

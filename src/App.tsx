@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 
 import { HomePage } from "./page/home-page";
-import {Proba} from "./page/proba"
+
 import { NewsDescProvider } from "./page/singlenews/news-desc-provider";
 import { NewsEditorProvider } from "./page/edit-news/news-editor-provides";
 import LoginModal from "./page/login/login-modal";
@@ -22,17 +22,12 @@ export const App = () => {
     <React.StrictMode>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-
-          {/* <Route path="/register" element={<RegisterPage />} /> */}
+          <Route path="/" element={<HomePage />} />  
           <Route path="/edit" element={<NewsEditorProvider />} />
           <Route path="/edit/:id" element={<NewsEditorProvider />} />
-          <Route path="/news/:id" element={<NewsDescProvider />} />
-          <Route path="/paiganted" element={<PaginatedModal isOpen={true} onClose={()=>{} } items={["első","második","harmadik"]} />} />
-          {/* <Route path="/login" element={<LoginProvider />} /> */}
-          <Route path="/proba" element={<Proba />} />
-          <Route path="/users" element={<UsersList/>}/> 
-          {/* <Route path="/users" element={<UserDescProvides/>}/>   */}
+          <Route path="/news" element={<NewsDescProvider />} />
+          <Route path="/paiganted" element={<PaginatedModal isOpen={true} onClose={()=>{} } items={["első","második","harmadik"]} />} />     
+          <Route path="/users" element={<UsersList/>}/>    
           <Route path="/user" element={<UserDescProvides/>}/> 
         </Routes>
         <LoginProvider />

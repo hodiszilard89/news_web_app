@@ -52,8 +52,9 @@ export const NewsList: FC = () => {
   return (
 
         <Grid
+
           as={OrderedList}
-          templateColumns="repeat(4, 1fr)"
+          templateColumns={{ base: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr' }}
           sx={{
             gap: 12,
             listStyleType: "none",

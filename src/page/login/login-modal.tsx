@@ -1,11 +1,12 @@
 import React, { FC, useState, useCallback, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { decodeJwt } from "jose";
-import { FormErrorMessage } from "@chakra-ui/react";
+import { ChakraProvider, FormErrorMessage, ModalContent, ModalOverlay, FormControl, Input, Button, FormLabel} from "@chakra-ui/react";
 import axios from "axios";
 import { User } from "../../models/user";
-import { Modal, Form, Button, Container, FormLabel } from "react-bootstrap";
-import { closeLogin, selectLogin } from "../../store/news/login-slice";
+import { Modal, ModalBody, ModalFooter } from "@chakra-ui/react";
+
+import { closeLogin, selectLogin, selectShowLogin } from "../../store/news/login-slice";
 import { showReg } from "../../store/news/reg-slice";
 import { useFormik } from "formik";
 import { useAuthUser } from "react-auth-kit";
@@ -25,8 +26,8 @@ interface LoginModalParam {
   onSubmit: (param: GetTokenQueryParams) => {};
 }
 
-const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
-  const [showModal, setShowModal] = useState(false);
+const LoginModal: FC = () => {
+  const [showModal, setShowModal] = useState(useSelector(selectShowLogin));
   const initialToken: Token = {
     role: "",
     iss: "",
@@ -39,7 +40,7 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
   };
 
   const { showLogin } = useSelector(selectLogin);
-  //console.log(showLogin);
+
   const dispatch = useDispatch();
   const singIn = useSignIn();
 
@@ -47,8 +48,7 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
   const [tokenParams, setTokenParams] =
     useState<GetTokenQueryParams>(initParam);
 
-  const dispach = useDispatch();
- const [responseErrors, setResponseErrors] = useState<string|undefined>(undefined)
+
   const auth = useAuthUser();
   const authUserInStorage = auth();
 
@@ -61,17 +61,17 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
     console.log(authUser);
     // dispach(setNews(news));
 
-    dispach(setUser(data));
+    dispatch(setUser(data));
   }, [data]);
 
   const { serverErrors, isLoading, isFetching, tokenValue } =
     useGetToken(tokenParams);
+  const [error, setError] = useState(serverErrors?.data.messages)
+  // const { serverErrors, isLoading, isFetching, tokenValue } = tokenParams
+  // ? useGetToken(tokenParams)
+  // : { serverErrors: null, isLoading: false, isFetching: false, tokenValue: null };
 
-    // const { serverErrors, isLoading, isFetching, tokenValue } = tokenParams
-    // ? useGetToken(tokenParams)
-    // : { serverErrors: null, isLoading: false, isFetching: false, tokenValue: null };
-
-    console.log(serverErrors);
+  
   useEffect(() => {
     if (tokenValue) {
       const { role, id } = decodeJwt(tokenValue) as unknown as Token;
@@ -84,72 +84,22 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
           tokenType: "Bearer",
           authState: { email: values.email, role, id },
         });
-        dispatch(closeLogin());
+      dispatch(closeLogin());
       // globál stateba rakni a frlhasználót
     } else {
-      setResponseErrors(serverErrors?.data.messages)
-      console.log("server Error", serverErrors?.data);
+      setError(serverErrors?.data.messages);
+      
     }
   }, [tokenValue, tokenParams]);
 
   //FORMIK RÉSZ
-  const { errors, values, setFieldValue, handleSubmit, setValues} = useFormik({
+  const { errors, values, setFieldValue, handleSubmit, setValues } = useFormik({
     initialValues: tokenParams,
     onSubmit: async (values, { setSubmitting }) => {
       await setTokenParams({
         email: values.email,
         password: values.password,
       });
-      //onSubmit(param)
-      // await AuthService.login(values.email, values.password);
-      // const response = await fetch(`/authentication`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     accept: "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     username: values.email,
-      //     password: values.password,
-      //   }),
-      // });
-      // //RESPONse Kiírása
-      // if (!response.ok) {
-      //   const errorData = await response.json();
-      //   window.confirm(errorData.messages[0]);
-      //   //onsole.log(errorData.messages[0]);S
-      // }
-
-      //let token = "";
-
-      //tokenFromServer&&(token=tokenFromServer)
-
-      //KILEHETNE SZERVEZNI A PROVIDERBE
-      // console.log(token);
-
-      //console.log(userId);
-      //   : initialToken;
-      // if (tokenValue !== "") {
-      //   console.log("hiba az autentikációban");
-      // } else {
-
-      //   tokenValue && dispatch(setToken(tokenValue));
-      //   tokenValue &&
-      //     singIn({
-      //       token: tokenValue,
-      //       expiresIn: 36000,
-      //       tokenType: "Bearer",
-      //       authState: { email: values.email, role, userId },
-      //     });
-      // }
-
-      //console.log("role ", role);
-
-      // singIn({
-      //   token: response.data,
-      // });
-
-      //dispatch(closeLogin());
     },
   });
 
@@ -160,10 +110,12 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
     //dispatch(showReg());
   }, []);
 
+
   const onClose = useCallback(() => {
     dispatch(closeLogin());
-    setResponseErrors(undefined)
-    //setValues({email:"", password:""})
+    setShowModal(false)
+    setError("");
+    setValues({email:"", password:""})
   }, [dispatch]);
 
   useEffect(() => {
@@ -171,46 +123,40 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
   }, [showLogin]);
 
   useEffect(() => {
-    // return () => {
-    //   dispach(closeLogin());
-    // };
-  });
+    setError(serverErrors?.data.messages)
+  },[serverErrors]);
 
   return (
-    <Container>
-        
-      <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        onExit={() => {
-          console.log("bezásás");
-          dispach(closeLogin());
-        }}
+    <ChakraProvider>
+      <Modal 
+        blockScrollOnMount={false}
+        isOpen={showModal}
+        onClose={() => onClose()}        
       >
-       
-        <Modal.Header closeButton onClick={onClose}>
-          <Modal.Title>Bejelentkezés</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-       
-          <Form as="form" onSubmit={handleSubmit} >
-            <FormLabel>{responseErrors?`Error ${responseErrors}`:""}</FormLabel>
-            <Form.Group controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
+        <ModalOverlay opacity={0.5}/>
+        <ModalContent
+         
+        >
+        <ModalBody>
+          <form onSubmit={handleSubmit}>
+            <FormLabel>
+              {error ? `Error ${error}` : ""}
+            </FormLabel>
+            <FormControl>
+              <FormLabel>Email</FormLabel>
+              <Input
                 //type="email"
                 type="text"
-                
                 placeholder="Adja meg az email címét"
                 value={values.email}
                 autoComplete="new-email"
                 onChange={(event) => setFieldValue("email", event.target.value)}
               />
-            </Form.Group>
+            </FormControl>
 
-            <Form.Group controlId="formPassword">
-              <Form.Label>Jelszó</Form.Label>
-              <Form.Control
+            <FormControl>
+              <FormLabel>Jelszó</FormLabel>
+              <Input
                 type="password"
                 autoComplete="new-password"
                 placeholder="Adja meg a jelszavát"
@@ -219,7 +165,7 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
                   setFieldValue("password", event.target.value)
                 }
               />
-            </Form.Group>
+            </FormControl>
             <Button
               onClick={() => {
                 setTokenParams({
@@ -232,18 +178,19 @@ const LoginModal: FC<LoginModalParam> = ({ onSubmit }) => {
             >
               Bejelentkezés
             </Button>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
+          </form>
+        </ModalBody>
+        <ModalFooter>
           <Button variant="secondary" onClick={onOpenReg}>
             Regisztráció
           </Button>
           <Button variant="secondary" onClick={onClose}>
             Bezárás
           </Button>
-        </Modal.Footer>
+        </ModalFooter>
+        </ModalContent>
       </Modal>
-    </Container>
+    </ChakraProvider>
   );
 };
 

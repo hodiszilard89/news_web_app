@@ -15,17 +15,17 @@ import {
   Input,
   Flex,
   Icon,
+  Button
 } from "@chakra-ui/react";
-//import {Form} from 'react-bootstrap'
+
 import { useFormik } from "formik";
-import { Form, useParams } from "react-router-dom";
-import { useGetUser } from "../../store/hooks/use-get-user";
+
 import { User } from "../../models/user";
-import { Button } from "react-bootstrap";
+
 import { useUserChancages } from "../../store/hooks/use-user-chancages";
 import { useSelector } from "react-redux";
 import { selectAuthUser } from "../../store/news/auth-user-slice";
-import { selectUser } from "../../store/news/users-slice";
+
 import { useUploadImageMutation } from "../../store/news/news-api";
 
 export interface UserDescProps {
@@ -34,11 +34,11 @@ export interface UserDescProps {
 }
 
 export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
-  const fileInput = document.getElementById("file-input");
-  //const file = fileInput?.files[0];
+
+
   const reader = new FileReader();
 
-  // const [image, setImage] = useState<File>();
+ 
   const [base64Image, setBase64Image] = useState("");
   const [imgageUpload] = useUploadImageMutation();
   const [viewPass, setViewPass] = useState<Boolean>(false);
@@ -205,21 +205,7 @@ export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
                 )}
               </GridItem>
             </Grid>
-            {/* <Grid mb={5} templateColumns="repeat(3, 1fr)" gap={4}>
-              <GridItem bg="">
-                <FormLabel textTransform={"none"}>Imagepath</FormLabel>
-              </GridItem>
-              <GridItem bg="">
-                <Input
-                  id={Math.random().toString()}
-                  value={values?.imagePath}
-                  onChange={(event) => {
-                    setFieldValue("imagePath", event.target.value);
-                  }}
-                  //sx={style.inputField}
-                />
-              </GridItem>
-            </Grid> */}
+
             <Grid
               mb={5}
               templateColumns="repeat(3, 1fr)"
@@ -255,32 +241,28 @@ export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
 
                     //setImage(file)
                   }}
-                  // value={values?.imagePath}
-                  // onChange={(event) => {
-                  //   setFieldValue("imagePath", event.target.value);
-                  // }}
-                  //sx={style.inputField}
+
                 />
               </GridItem>
             </Grid>
           </FormControl>
         </>
 
-        <Button type={"submit"} size={"lg"}>
+        <Button colorScheme='teal' variant='solid' type={"submit"} size={"lg"}>
           Küldés
         </Button>
         {user.laws?.find((law) => law.title === "ADMIN") ? (
           <>
             <Link ms={4} as={rLink} to={"/users"}>
-              <Button size={"lg"}>Back to Users List</Button>
+              <Button colorScheme='teal' variant='solid' size={"lg"}>Back to Users List</Button>
             </Link>
             <Link ms={4} as={rLink} to={"/"}>
-              <Button size={"lg"}>Főoldal</Button>{" "}
+              <Button colorScheme='teal' variant='solid' size={"lg"}>Főoldal</Button>{" "}
             </Link>
           </>
         ) : (
           <Link ms={4} as={rLink} to={"/"}>
-            <Button size={"lg"}>Főoldal</Button>{" "}
+            <Button colorScheme='teal' variant='solid' size={"lg"}>Főoldal</Button>{" "}
           </Link>
         )}
       </Box>

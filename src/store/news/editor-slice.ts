@@ -30,8 +30,9 @@ export const newsEditorSlice = createSlice({
             },
         setNews: (
             state:NewsEditorState, 
-            action: PayloadAction<RawNews>)=>{     
-                state.news={...action.payload}  
+            action: PayloadAction<RawNews|null>)=>{     
+                if (action.payload) state.news={...action.payload}  
+                    else state.news=action.payload
              },
         setId:(
             state:NewsEditorState,

@@ -6,7 +6,16 @@ import React, {
   useDeferredValue,
 } from "react";
 
-import { Card, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
+import {
+  Card,
+  Box,
+  CardBody,
+  CardHeader,
+  Image,
+  Text,
+  Flex,
+} from "@chakra-ui/react";
 import { FaNewspaper, FaThumbsUp, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuthUser, useSignOut } from "react-auth-kit";
@@ -23,21 +32,15 @@ import {
   selectAuthUser,
 } from "../../store/news/auth-user-slice";
 import { User } from "../../models/user";
-import { createUser } from "../../utils/create-user";
-import { setNewsTypeId } from "../../store/news/news-slice";
-import { useUserChancages } from "../../store/hooks/use-user-chancages";
+
 import { useCreateLikeMutation } from "../../store/news/news-api";
-import { KeyLike } from "jose";
-import { Like } from "../../models/like";
 
 export interface NewsListItemProps {
- 
   news: News;
   stateId: number;
 }
 
 export const NewsListItem: FC<NewsListItemProps> = ({
-
   news: fromState,
   stateId,
 }) => {
@@ -45,22 +48,21 @@ export const NewsListItem: FC<NewsListItemProps> = ({
   const auth = useAuthUser();
   const authUser = auth();
   const [news, setNews] = useState<News>(fromState);
-  const userInState= useSelector(selectAuthUser).user
-  const [user, setUser] =useState<User|undefined>(userInState);
-//useEffect(()=>{setNews(fromState)},[fromState])
+  const userInState = useSelector(selectAuthUser).user;
+  const [user, setUser] = useState<User | undefined>(userInState);
+  //useEffect(()=>{setNews(fromState)},[fromState])
   const [addLike] = useCreateLikeMutation();
-
 
   const onClick = useCallback(() => {
     dispach(setNewsEditSlice(serializNews(news)));
   }, [news]);
 
-
-  useEffect(()=>{setUser(userInState)},[userInState])
+  useEffect(() => {
+    setUser(userInState);
+  }, [userInState]);
 
   //useCallback(() => user && setLoggedUser(user), []);
   const menu = useCallback(() => {
- 
     //  console.log("state id",stateId)
     if (authUser !== null && authUser.role.includes("ADMIN")) {
       return (
@@ -75,21 +77,15 @@ export const NewsListItem: FC<NewsListItemProps> = ({
   }, [authUser, stateId]);
 
   const userDidLike = useCallback(
-   (news: News) => {
-      // console.log("user likolt hírei ", user?.likednews.map(serializNews));
-      // console.log("hírei amit keresek ", serializNews(news));
-      //const newLikes = user && [...user?.likes, news];
-      //belső state manuipulálása
-      // await setLoggedUser((prevState) => ({
-      //   ...prevState,
-      //   likes: [],
-      // }));
-       setNews({ ...news, likes: news.likes?.find((item)=>item.id===user?.id)
-          ? news.likes.filter((item)=>item.id!==user?.id)
-          :news.likes?.concat(user!)});
+    (news: News) => {
+      setNews({
+        ...news,
+        likes: news.likes?.find((item) => item.id === user?.id)
+          ? news.likes.filter((item) => item.id !== user?.id)
+          : news.likes?.concat(user!),
+      });
 
-  
-       setUser({
+      setUser({
         ...user!,
         likednews: user?.likednews.find((item) => item.id === news.id)
           ? user!.likednews.filter((item) => item.id !== news.id)
@@ -107,15 +103,8 @@ export const NewsListItem: FC<NewsListItemProps> = ({
   );
 
   const likeButton = useCallback(() => {
-    // console.log(user)
-    
-    // console.log(
-    //   "feltétel kiértékelés ",
-    //   user!.likednews.find((item) => item.id === news.id)
-    // );
- 
     return (
-      <Col>
+      <Box display={"inline-flex"}>
         <Link to="/">
           <FaThumbsUp
             className="me-2 fs-5 "
@@ -124,46 +113,45 @@ export const NewsListItem: FC<NewsListItemProps> = ({
                 ? { color: "blue" }
                 : { color: "gray" }
             }
-            onClick={() =>{ user?userDidLike(news):window.confirm("jelentkezz be!")}}
+            onClick={() => {
+              user ? userDidLike(news) : window.confirm("jelentkezz be!");
+            }}
           />
         </Link>
         {news.likes!.length}
-      </Col>
+      </Box>
     );
   }, [user?.likednews, userInState]);
 
   return (
-    <Card>
+    <Card padding={0}>
       {menu()}
-      <Card.Body>
-        {"newsID: "+news.id+"  stateID:"}
-        {stateId}
-        <Link to={`/news/${stateId}`} onClick={onClick}>
-          <Card.Title>
+      <CardBody margin={0}>
+        <Link to={`/news`} onClick={onClick}>
+          <CardHeader padding={0}>
             <h4>
               <b>{news.title}</b>
             </h4>
-          </Card.Title>
-          {/* <Link to={`/edit/${news.id}`}> */}
-          <Card.Img
-            src={news.imgPath}
-            onClick={onClick}
-            style={{ width: "00px", height: "150px" }}
-          />
+          </CardHeader>
+          {/* <Link to={`/edit`}> */}
+          {news.imgPath && (
+            <Image
+              src={news.imgPath}
+              onClick={onClick}
+              style={{ width: "100%", height: "150px" }}
+            />
+          )}
           {/* </Link> */}
 
-          <Card.Subtitle className="my-2 text-muted"></Card.Subtitle>
-          {news.subtitle}
-          <Card.Text>{news.text.substring(0, 50)}...</Card.Text>
+          {news?.subtitle ? news.subtitle : ""}
+          <Text>{news.text?.substring(0, 50)}...</Text>
         </Link>
-        <Row>
-          <Col>{likeButton()}</Col>
-          <Col className="text-end">
-            {}
-            <p>szerző: {news.writer?.chatName}</p>
-          </Col>
-        </Row>
-      </Card.Body>
+
+        <Flex justifyItems="center" justify="space-between" margin={0}>
+          {likeButton()}
+          <Text>szerző: {news.writer?.chatName}</Text>
+        </Flex>
+      </CardBody>
     </Card>
   );
 };

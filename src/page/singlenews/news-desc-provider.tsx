@@ -18,8 +18,7 @@ import { User } from "../../models/user";
 import { useAuthHeader } from "react-auth-kit";
 import { useAuthUser } from "react-auth-kit";
 import { useGetUser } from "../../store/hooks/use-get-user";
-import { serializeComment } from "../../utils/news_factory";
-import { createRawNews } from "../../utils/create-raw-news";
+import { Footer } from "../../componens/alap-comp/footer";
 import { useCreateCommentMutation } from "../../store/news/news-api";
 
 interface prop {
@@ -77,17 +76,18 @@ export const NewsDescProvider: FC<prop> = ({ news }) => {
   const comment = createComment();
   // news && (comment.news = news);
   comment.writer = data!;
-
+ 
   return (
     <div>
-      {
+  
         <NewsDescription
           key={id}
           id={Number(id)}
           comment={comment}
           onSubmit={onSubmit}
-        ></NewsDescription>
-      }
+        />    
+         <Footer/>
+      
     </div>
   );
 };

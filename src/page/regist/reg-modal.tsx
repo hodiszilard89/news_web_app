@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { decodeJwt } from "jose";
-//import { Form, Button, Container, Row, FormControl } from "react-bootstrap";
+
+
 import {
   Box,
   FormLabel,
@@ -18,17 +18,14 @@ import {
   ChakraProvider,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import { RegValidationSchema } from "./reg-validation.schema";
+
 import { CheckCircleIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { showLogin, selectLogin } from "../../store/news/login-slice";
 import { closeReg, selectShowReg } from "../../store/news/reg-slice";
 import { useFormik } from "formik";
-//import AuthService from "../../../login-auth/auth-service";
 
-import { useSignIn } from "react-auth-kit";
-import { setToken } from "../../store/news/auth-user-slice";
 import { useAddUser } from "../../store/hooks/useAddUser";
-import { create } from "domain";
+
 import { createUser } from "../../utils/create-user";
 
 export const initValues = {
@@ -50,8 +47,7 @@ const RegModal: FC = () => {
   const [showPass, setShowPass] = useState<boolean>(false);
 
   const [showModal, setShowModal] = useState(false);
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+
   const showReg = useSelector(selectShowReg);
   const dispatch = useDispatch();
 

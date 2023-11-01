@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, FormControl } from "react-bootstrap";
+
 import { useDispatch, useSelector } from "react-redux";
 import Container from "react-bootstrap/Container";
 import { Link, useNavigate } from "react-router-dom";
@@ -64,6 +64,7 @@ export const MyNavbar: FC = () => {
   //-------------------------------------
 
   const auth = useAuthUser();
+  const authUser = auth();
   const user = useSelector(selectOnlineUser);
 
   useEffect(() => {
@@ -71,7 +72,7 @@ export const MyNavbar: FC = () => {
     user&&dispatch(setEditUser(user))
   }, [user]);
 
-  const authUser = auth();
+
 
   const addNews = useCallback(() => {
     if (
@@ -89,15 +90,15 @@ export const MyNavbar: FC = () => {
 
   const usersList = () => {
     return (
-      <Button
-        as={Link}
+      <Nav.Link
+         as={Link}
         to="/users"
         onClick={openEditor}
         className={"fs-5"}
-        sx={style.menuButton}
+        // sx={style.menuButton}
       >
         Users
-      </Button>
+      </Nav.Link>
     );
   };
 
@@ -131,8 +132,6 @@ export const MyNavbar: FC = () => {
             }}
           />
         )}
-
-        {/* <FaUser size="1em" className="ms-3" onClick={() => {}} /> */}
       </>
     );
   }, [authUser]);
@@ -142,9 +141,10 @@ export const MyNavbar: FC = () => {
     //dispatch(showEditor());
   }, []);
 
-  //console.log(person);
+  
   return (
     <div>
+   
       {["md"].map((expand) => (
         <Navbar
           style={{ position: "sticky", zIndex:1}}

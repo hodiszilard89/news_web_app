@@ -9,7 +9,8 @@ export const CommentList: FC<CommentListProps> = ({ comments }) => {
   return (
     <>
       {comments.map((comment, id) => {
-        return (
+       
+        return (<>
           <MyComment
             key={id}
             authorImage={comment.writer && comment.writer.imagePath}
@@ -17,6 +18,7 @@ export const CommentList: FC<CommentListProps> = ({ comments }) => {
             date={comment && comment.releasedate}
             text={comment.text}
           />
+          </>
         );
       })}
     </>

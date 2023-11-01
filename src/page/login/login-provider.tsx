@@ -15,7 +15,7 @@ export const LoginProvider: FC = () => {
   const onSubmit = async (param: GetTokenQueryParams) => {};
   return (
     <div>
-      <LoginModal onSubmit={onSubmit} />
+      <LoginModal  />
     </div>
   );
 };

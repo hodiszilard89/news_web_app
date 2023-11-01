@@ -55,6 +55,7 @@ export const UserMenu: FC<UserMenuProps> = ({
     >
       <Box>
         <MenuButton
+       
           as={IconButton}
           icon={isOpen ? <CloseIcon /> : 
           //Megvizsgálni bevan-e jelentkezve

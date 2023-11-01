@@ -13,16 +13,11 @@ export const UserDescProvides : FC  = () =>{
     const { id } = useParams<"id">();
     const dispach=useDispatch();
     const user = useSelector(selectUser)
-    //const [anUser, setAnUser] = useState<User>();
-    //const { user} =  useGetUser(Number(id));
-    //const anUser= useMemo(()=>(user), [user]);
-  
-    //
+
     return (
         user?
         <UserDesc  
-        //user={user?user:createUser()}
-        //user={user?user:createUser()}
+
         user={user}
          onSubmit={Promise.resolve}></UserDesc>:<></>)
 

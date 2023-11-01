@@ -36,10 +36,6 @@ export const GenreSelector: FC<GenreSelectorProps> = ({
 
   const styles = useMultiStyleConfig("GenreSelector", {});
 
-
-//  useEffect(()=>{
-//   onChange(selectedItems)
-//  },[selectedItems])
 useEffect(()=>{
   onChange(selectedItems)
 },[selectedItems])
@@ -67,6 +63,7 @@ useEffect(()=>{
     <Grid templateColumns="repeat(2, 1fr)" gap={4}>
       <Box>
         <Menu
+          onClose={()=>console.log("asdasd")}
           placement="bottom-start"
           autoSelect={false}
           isLazy={true}
@@ -74,6 +71,7 @@ useEffect(()=>{
           offset={[4, 3]}
         >
           <MenuButton
+           
             as={Button}
             rightIcon={<TriangleDownIcon color="text.highlighted" />}
             sx={styles.button}
@@ -92,6 +90,7 @@ useEffect(()=>{
             onChange={onChangeHandler}
           >
             <MenuList
+              maxW={200}
               //rootProps={styles.checkboxRoot as BoxProps}
               sx={styles.checkboxList}
             >
