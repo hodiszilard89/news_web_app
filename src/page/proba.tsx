@@ -9,10 +9,6 @@ export const Proba: FC = () => {
   const [list, setList] = useState<Genre[] | undefined>();
   const genreList = Object.values(Genre);
 
-  const onClick = (value: string) => {
-    console.log("provider", value);
-  };
-
   return (
     <Box position={"absolute"} w={"200px"} h={"50"} >
       <Link

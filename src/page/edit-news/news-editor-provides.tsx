@@ -1,8 +1,7 @@
-import React, { FC, useEffect, useCallback, FormEvent, useState } from "react";
+import React, { FC, useCallback} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  selectEditor,
-  selectNews,
+
   setNews,
 } from "../../store/news/editor-slice";
 
@@ -31,11 +30,11 @@ export const NewsEditorProvider: FC = () => {
   );
 
   return (
-    <div>
+    <>
       <NewsEditor
         id={newsId ? Number(newsId) : 0}
         onSubmit={onSubmit}
       ></NewsEditor>
-    </div>
+    </>
   );
 };

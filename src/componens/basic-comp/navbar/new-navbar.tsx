@@ -1,17 +1,16 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { UserMenu } from "./user_menu";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { showLogin } from "../../../store/news/login-slice";
 import { useNewsTypes } from "../../../store/hooks/use-news-types";
 import { setNewsTypeId } from "../../../store/news/news-slice";
-import { useAuthUser, useSignOut, useAuthHeader } from "react-auth-kit";
+import { useSignOut } from "react-auth-kit";
 import {
   Box,
   Flex,
   Text,
-  FormControl,
   Input,
   IconButton,
   Button,
@@ -25,20 +24,16 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-} from "@chakra-ui/icons";
+import { HamburgerIcon, CloseIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { selectOnlineUser } from "../../../store/news/auth-user-slice";
 import { showReg } from "../../../store/news/reg-slice";
-import { setUser, outUser } from "../../../store/news/auth-user-slice";
+import { outUser } from "../../../store/news/auth-user-slice";
 import { FaNewspaper } from "react-icons/fa";
 import { Type } from "../../../models/type";
-import { useHeaderSearch } from "../use-header-search";
+import { useHeaderSearch } from "../../../store/hooks/use-header-search";
 import { setNews } from "../../../store/news/editor-slice";
 import { setEditUser } from "../../../store/news/users-slice";
+import { setSearchText } from "../../../store/news/search-slice";
 
 interface MenuItem {
   label: string;
@@ -53,27 +48,31 @@ export const NewNavbar: FC = () => {
   const { isOpen, onToggle } = useDisclosure();
   const user = useSelector(selectOnlineUser);
 
-  const auth = useAuthUser();
-  const authUser = auth();
   const singOut = useSignOut();
   const { searchQuery, onChange, onSubmit } = useHeaderSearch();
 
   const dispach = useDispatch();
   const navigate = useNavigate();
-  // scrollozás
-  const { isLoading, error, types } = useNewsTypes();
+
+  const { types } = useNewsTypes();
   const type: MenuItem[] = [{ label: "TÉMÁK", children: [...types] }];
   const actions: MenuItem[] = [{ label: "MŰVELETEK", children: [...ACTIONS] }];
   return (
-    <Box style={{ position: "sticky", top: "0", zIndex: "10" }} pb={5}>
+    <Box
+      style={{ position: "sticky", top: "0", zIndex: "10" }}
+      pb={5}
+      boxShadow="0px 8px 4px rgba(0, 0, 0, 0.1)"
+      padding="4"
+      backgroundColor={"white"}
+      borderRadius="md"
+      marginBottom={"3em"}
+    >
       <Flex
-        bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
         minH={"60px"}
         py={{ base: 2 }}
         px={{ base: 4 }}
         borderBottom={1}
-        borderStyle={"solid"}
         borderColor={useColorModeValue("gray.200", "gray.900")}
         align={"center"}
       >
@@ -102,7 +101,13 @@ export const NewNavbar: FC = () => {
             fontFamily={"heading"}
             color={useColorModeValue("gray.800", "white")}
           >
-            <Link onClick={() => dispach(setNewsTypeId(-1))} to={"/"}>
+            <Link
+              onClick={() => {
+                dispach(setSearchText(""));
+                dispach(setNewsTypeId(-1));
+              }}
+              to={"/"}
+            >
               <Flex
                 display={"flex"}
                 fontSize={"2xl"}
@@ -117,7 +122,7 @@ export const NewNavbar: FC = () => {
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav arr={type} />
-            {user?.laws?.find((law) => law.title === "ADMIN") ? (
+            {user?.laws?.find((law) => law.title === "ADMIN" || "USER") ? (
               <DesktopNav arr={actions} />
             ) : (
               ""
@@ -168,7 +173,7 @@ export const NewNavbar: FC = () => {
               <Box textAlign={"end"}>
                 <UserMenu
                   showProfile={() => {
-                    dispach(setEditUser(user))
+                    dispach(setEditUser(user));
                     navigate("/user");
                   }}
                   onExit={() => {
@@ -186,7 +191,7 @@ export const NewNavbar: FC = () => {
                 fontWeight={600}
                 onClick={() => dispach(showLogin())}
               >
-                Sign In
+                Bejelentkezés
               </Button>
               <Button
                 onClick={() => {
@@ -196,7 +201,7 @@ export const NewNavbar: FC = () => {
                 fontSize={"sm"}
                 fontWeight={600}
               >
-                Sign Up
+                Regisztáció
               </Button>
             </>
           )}

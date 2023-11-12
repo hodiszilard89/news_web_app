@@ -58,7 +58,7 @@ const LoginModal: FC = () => {
 
   useEffect(() => {
     setMyAuthUser(data);
-    console.log(authUser);
+
     // dispach(setNews(news));
 
     dispatch(setUser(data));

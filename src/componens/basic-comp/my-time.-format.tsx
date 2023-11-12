@@ -1,18 +1,18 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 interface MyTimeFormatParams {
   date: Date;
 }
 
 export const MyTimeFormat: FC<MyTimeFormatParams> = ({ date }) => {
-  /// console.log(new Date( Date.now()-new Date(date).getTime()))
+ 
   const ago = Date.now() - new Date(date).getTime();
 
   const secund = Math.floor(ago / 1000);
   const minute = Math.floor(secund / 60);
   const hour = Math.floor(minute / 60);
   const day = Math.floor(hour / 24);
-  const week = Math.floor(day / 7);
+
   const month = Math.floor(day / 30);
   if (month > 0) {
     return <>{month} hónappal ezelőtt</>;

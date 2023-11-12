@@ -16,32 +16,6 @@ export const CaroselLabel: ComponentMultiStyleConfig = {
         zIndex: -1,
       },
     },
-    proba: {
-      // //whiteSpace:"normal",
-      // //overflow: "hidden",
-      //   position: "absolute",
-      // //content:"attr(data-length)",
-      // backgroundColor:"black",
-      // padding: "2px 5px",
-      // color:"white",
-      _hover: {
-        // cursor:"pointer",
-        position: "relative",
-        display: "inline-block",
-        _before: {
-          content: "''",
-          position: "relative",
-          bottom: "0",
-          left: "0",
-          width: "100%",
-          height: "2px", // Vonal magassága
-          backgroundColor: "blue", // Vonal színe
-          transform: "scaleX(0)", // Alapértelmezésben láthatatlan
-          transformOrigin: "center",
-          transition: "transform 0.5s ease-in-out", // Animáció a sima átmenethez
-        },
-      },
-    },
     image: {
       transition: "all .7s ease;",
       display:

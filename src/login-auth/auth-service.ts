@@ -36,7 +36,7 @@ export const AuthService = (()=>{})
 //   };
 
 //   const getAuthToken = () => {
-//     console.log(storage.getItem(TOKEN_NAME));
+
 //     return storage.getItem(TOKEN_NAME) ?? null;
 //   };
 

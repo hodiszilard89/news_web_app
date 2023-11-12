@@ -1,6 +1,6 @@
 import { ComponentMultiStyleConfig } from "@chakra-ui/react";
 
-export const MovieItemMenu: ComponentMultiStyleConfig = {
+export const NewsItemMenu: ComponentMultiStyleConfig = {
   parts: ["closeIcon", "menuButton", "menuItem", "menuList"],
   baseStyle: {
     closeIcon: {

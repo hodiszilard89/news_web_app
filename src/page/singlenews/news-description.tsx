@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import { Box, Text, FormControl, Input, FormLabel, Button, Image } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { useMultiStyleConfig } from "@chakra-ui/react";
@@ -13,8 +13,8 @@ import { newsFactory, serializNews } from "../../utils/news_factory";
 
 import { selectAuthUser } from "../../store/news/auth-user-slice";
 import { News } from "../../models/news";
-import { NewNavbar } from "../../componens/alap-comp/navbar/new-navbar";
-import { isUndefined } from "util";
+import { NewNavbar } from "../../componens/basic-comp/navbar/new-navbar";
+
 
 export interface NewsDescProps {
   comment: Comment;
@@ -68,7 +68,7 @@ export const NewsDescription: FC<NewsDescProps> = ({
     },
     validationSchema: null,
   });
-  console.log("news writer", news?.writer?.imagePath);
+
 
   return (
     <Box margin={"auto"} w={"80%"}>
@@ -97,14 +97,13 @@ export const NewsDescription: FC<NewsDescProps> = ({
                 );
               })}
             </Box>
-            <p>
-              {
-                <small>
+            <Text>
+              
+          
                   Szerző: {newsFromState && newsFromState.writer?.chatName}
-                </small>
-              }
-            </p>
-            <h2>{newsFromState?.title}</h2>
+               
+            </Text>
+            <Text fontSize={"2xl"} fontWeight={"bold"}>{newsFromState?.title}</Text>
             <section style={{ fontSize: "18px" }}>
               {newsFromState?.text}
             </section>
@@ -141,6 +140,5 @@ export const NewsDescription: FC<NewsDescProps> = ({
     </Box>
   );
 
-  // console.log(user);
-  // return <></>
+
 };

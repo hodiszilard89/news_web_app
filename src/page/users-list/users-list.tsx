@@ -2,7 +2,6 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ViewIcon,
-  DeleteIcon,
   SettingsIcon,
   NotAllowedIcon,
 } from "@chakra-ui/icons";
@@ -12,28 +11,28 @@ import {
   Button,
   TableContainer,
   Thead,
-  useMultiStyleConfig,
   Tr,
   Th,
   Table,
   Tbody,
   Td,
   Image,
-  useFocusEffect,
+
 } from "@chakra-ui/react";
 
 import {setEditUser} from '../../store/news/users-slice'
 import { useGetUsers } from "../../store/hooks/use-get-users";
 import { useUserChancages } from "../../store/hooks/use-user-chancages";
-import MyNavbar from "../../componens/alap-comp/navbar/navbar";
+
 import { useDispatch } from "react-redux";
 import { User } from "../../models/user";
+import { NewNavbar } from "../../componens/basic-comp/navbar/new-navbar";
 
 export const UsersList: FC = () => {
   const dispatch= useDispatch();
   const { deleteUser } = useUserChancages();
   const ICON_SIZE = 25;
-  const style = useMultiStyleConfig("MovieItemMenu", {});
+  
   const users = useGetUsers();
   const [data, setData]= useState<User[]>();
   
@@ -45,10 +44,11 @@ export const UsersList: FC = () => {
   }, []);
   useEffect(()=>{users&&setData(users)},[users])
   return (
-    <div>
+    <>
       {" "}
-      <MyNavbar />
-      <Box maxWidth={"90%"} margin={"auto"}>
+     
+      <Box width={"80%"} margin={"auto"}>
+      <NewNavbar />
         <TableContainer>
           <Table variant="simple" colorScheme="cian">
             <Thead>
@@ -87,7 +87,6 @@ export const UsersList: FC = () => {
                           <Icon
                             onClick={() => {
                               dispatch(setEditUser(user))
-                              console.log("hello");
                             }}
                             fontSize={ICON_SIZE}
                             style={{ margin: "0 20px" }}
@@ -122,11 +121,8 @@ export const UsersList: FC = () => {
           {" "}
           Főoldal
         </Button>
-        <Button ms={"5"} mt={"5"} size={"md"} as={Link} to="/">
-          {" "}
-          Add User
-        </Button>
+       
       </Box>
-    </div>
+    </>
   );
 };

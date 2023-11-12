@@ -18,7 +18,7 @@ export const GenresLable: ComponentMultiStyleConfig ={
             boxSize:"4",      
             margin: ".5em 0 .5em .5em",
             padding: ".2em  ",
-            
+            color:"black",
             _hover:{
                 cursor:"pointer"
                 }

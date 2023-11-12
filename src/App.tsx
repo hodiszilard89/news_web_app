@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 
@@ -8,13 +8,13 @@ import { HomePage } from "./page/home-page";
 
 import { NewsDescProvider } from "./page/singlenews/news-desc-provider";
 import { NewsEditorProvider } from "./page/edit-news/news-editor-provides";
-import LoginModal from "./page/login/login-modal";
+
 import { UsersList } from "./page/users-list/users-list";
 import { LoginProvider } from "./page/login/login-provider";
-import { UserDesc } from "./page/user/user-desc";
+
 import RegModal from "./page/regist/reg-modal";
 import { UserDescProvides } from "./page/user/user-desc-provides";
-import PaginatedModal from "./componens/alap-comp/paginatedmodal";
+import PaginatedModal from "./componens/basic-comp/paginatedmodal";
 
 export const App = () => {
 

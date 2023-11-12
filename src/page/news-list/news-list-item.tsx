@@ -1,12 +1,5 @@
-import React, {
-  FC,
-  useCallback,
-  useState,
-  useEffect,
-  useDeferredValue,
-} from "react";
+import { FC, useCallback, useState, useEffect } from "react";
 
-import { Row, Col } from "react-bootstrap";
 import {
   Card,
   Box,
@@ -16,24 +9,19 @@ import {
   Text,
   Flex,
 } from "@chakra-ui/react";
-import { FaNewspaper, FaThumbsUp, FaUser } from "react-icons/fa";
+import { FaThumbsUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useAuthUser, useSignOut } from "react-auth-kit";
+import { useAuthUser } from "react-auth-kit";
 import { News } from "../../models/news";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  showEditor,
-  setNews as setNewsEditSlice,
-} from "../../store/news/editor-slice";
+import { setNews as setNewsEditSlice } from "../../store/news/editor-slice";
 import { serializNews } from "../../utils/news_factory";
 import { NewsItemMenu } from "./news-item-menu";
-import {
-  authUserSlice,
-  selectAuthUser,
-} from "../../store/news/auth-user-slice";
+import { selectAuthUser } from "../../store/news/auth-user-slice";
 import { User } from "../../models/user";
 
 import { useCreateLikeMutation } from "../../store/news/news-api";
+import { Like } from "../../models/like";
 
 export interface NewsListItemProps {
   news: News;
@@ -50,30 +38,21 @@ export const NewsListItem: FC<NewsListItemProps> = ({
   const [news, setNews] = useState<News>(fromState);
   const userInState = useSelector(selectAuthUser).user;
   const [user, setUser] = useState<User | undefined>(userInState);
-  //useEffect(()=>{setNews(fromState)},[fromState])
+
   const [addLike] = useCreateLikeMutation();
 
   const onClick = useCallback(() => {
     dispach(setNewsEditSlice(serializNews(news)));
-  }, [news]);
+  }, [news, dispach]);
 
   useEffect(() => {
     setUser(userInState);
   }, [userInState]);
 
-  //useCallback(() => user && setLoggedUser(user), []);
   const menu = useCallback(() => {
-    //  console.log("state id",stateId)
     if (authUser !== null && authUser.role.includes("ADMIN")) {
-      return (
-        <NewsItemMenu
-          stateId={stateId}
-          //newsId={news.id!}
-          placement="bottom-end"
-        />
-      );
+      return <NewsItemMenu stateId={stateId} placement="bottom-end" />;
     }
-    return <></>;
   }, [authUser, stateId]);
 
   const userDidLike = useCallback(
@@ -92,14 +71,12 @@ export const NewsListItem: FC<NewsListItemProps> = ({
           : user!.likednews.concat(news),
       });
       if (user) {
-        addLike({ user: user, news: serializNews(news) });
+        addLike({ user: user, news: serializNews(news) } as Like);
       } else {
         window.confirm("jelentkezz be");
       }
-      //updateUser(loggedUser)
-      //console.log("Like", {user:loggedUser,news:serializNews(news)} as Like);
     },
-    [user?.likednews, news, user]
+    [ news, user, addLike]
   );
 
   const likeButton = useCallback(() => {
@@ -121,19 +98,19 @@ export const NewsListItem: FC<NewsListItemProps> = ({
         {news.likes!.length}
       </Box>
     );
-  }, [user?.likednews, userInState]);
+  }, [user, news, userDidLike]);
 
   return (
     <Card padding={0}>
       {menu()}
-      <CardBody margin={0}>
+      <CardBody margin={0} paddingTop={0}>
         <Link to={`/news`} onClick={onClick}>
           <CardHeader padding={0}>
-            <h4>
-              <b>{news.title}</b>
-            </h4>
+            <Text fontSize={"2xl"} fontWeight={"bold"}>
+              {news.title}
+            </Text>
           </CardHeader>
-          {/* <Link to={`/edit`}> */}
+
           {news.imgPath && (
             <Image
               src={news.imgPath}
@@ -141,10 +118,11 @@ export const NewsListItem: FC<NewsListItemProps> = ({
               style={{ width: "100%", height: "150px" }}
             />
           )}
-          {/* </Link> */}
 
-          {news?.subtitle ? news.subtitle : ""}
-          <Text>{news.text?.substring(0, 50)}...</Text>
+          <Text>
+          {news?.subtitle ? news.subtitle.substring(0,40)+"..." : ""}
+            </Text> 
+          
         </Link>
 
         <Flex justifyItems="center" justify="space-between" margin={0}>

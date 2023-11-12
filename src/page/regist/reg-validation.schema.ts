@@ -11,20 +11,20 @@ const isNameAvailable = async (name: string | undefined) => {
       throw new Error("Hiba történt a szerverrel való kommunikáció során.");
     }
     const data = await response.json();
-    console.log(data);
-    return data; // Vegyük észre, hogy a szerver visszatérési értéke lehet "true" vagy "false"
+    return data;
   } catch (error) {
     console.error("Hiba:", error);
-    return false; // Alapértelmezett érték, ha hiba történik
+    return false;
   }
 };
 
+let isAvailable = false;
 export const RegValidationSchema = Yup.object({
   email: Yup.string()
     .email("Érvénytelen e-mail cím formátum.")
 
     .test("unique-email", "ez az email cím már foglalt", async (email) => {
-      let isAvailable = false;
+      //let isAvailable = false;
       if (username != email) isAvailable = await isNameAvailable(email);
       username = email ? email : "";
       return isAvailable;
@@ -36,4 +36,7 @@ export const RegValidationSchema = Yup.object({
   confirmpassword: Yup.string()
     .oneOf([Yup.ref("password")], "A jelszavak nem egyeznek meg.")
     .required("A jelszó megerősítése kötelező."),
+  chatname: Yup.string()
+    .min(6, "A név legalább 6 karakterből kell álljon.")
+    .required("A név megadása kötelező, ezzel tudsz bejelentkezni."),
 });

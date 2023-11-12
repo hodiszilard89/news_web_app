@@ -1,14 +1,19 @@
-import React, { FC, useEffect, useState, useMemo, useCallback } from "react";
-import { Grid, GridItem, ListItem, OrderedList } from "@chakra-ui/react";
-import { useNewsList } from "../../store/hooks/use-news-list";
+import { FC, useEffect, useState } from "react";
+import {
+  Grid,
+  GridItem,
+  ListItem,
+  OrderedList,
+  Box,
+  Button,
+  Flex,
+} from "@chakra-ui/react";
 
-import { GetNewsQueryParams } from "../../store/news/news-api";
 import { NewsListItem } from "./news-list-item";
-import { News, RawNews } from "../../models";
+import { RawNews } from "../../models";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectTypeId,
-  selectNews,
   setNews,
   setPriorityNews,
 } from "../../store/news/news-slice";
@@ -16,59 +21,110 @@ import { useGetNewsByType } from "../../store/hooks/use-get-news-by-type";
 import { serializNews } from "../../utils/news_factory";
 import { newsFactory } from "../../utils/news_factory";
 import { selectSearchText } from "../../store/news/search-slice";
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 export const NewsList: FC = () => {
-  let query: GetNewsQueryParams;
-  const [newsDataState, setNewsDataState] = useState<RawNews[]>();
-  query = {};
+  const itemsPerPage = 12;
   const [id, setId] = useState<number>(-1);
-
   const dispatch = useDispatch();
-  const text = useSelector(selectSearchText);
-  console.log("search text", text)
+  const { news: allNews } = useGetNewsByType(id);
+  const [newsDataState, setNewsDataState] = useState<RawNews[]>([]);
+  //LAPOZÁS
+
+  //const currentNews = newsDataState.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(newsDataState.length / itemsPerPage);
+  const [pageIndex, setPageIndex] = useState(0);
+
+  //...LAPOZÁS VÉGE
+  const searchText = useSelector(selectSearchText);
   const idFromState = useSelector(selectTypeId);
-  const { news, isLoading, isFetching } = useGetNewsByType(id);
-  //const data = useMemo(() => news, [news]);
+  //const [pageIndex, setPageIndex] = useState(0)
+  const prioritis = allNews?.filter((news) => news.priority);
 
-  const prioritis = news?.filter((news) => news.priority);
- 
-
-  useEffect(()=>{setId(idFromState!)},[idFromState])
   useEffect(() => {
-    
-   
-    if (!text)
-          {news && setNewsDataState(news.map(serializNews))
-            news && dispatch(setNews(news.map(serializNews)))}
-          else
-          {setNewsDataState(news?.filter((news)=>(news.title.includes(text))).map(serializNews))
-            news && dispatch(setNews(news?.filter((news)=>(news.title.includes(text))).map(serializNews)))}
-    
+    setId(idFromState!);
+  }, [idFromState]);
+  useEffect(() => {
+    setPageIndex(0);
+    if (!searchText) {
+      allNews && setNewsDataState(allNews.map(serializNews));
+      allNews && dispatch(setNews(allNews.map(serializNews)));
+    } else {
+      allNews &&
+        setNewsDataState(
+          allNews
+            ?.filter((news) => news.title.includes(searchText))
+            .map(serializNews)
+        );
+      allNews &&
+        dispatch(
+          setNews(
+            allNews
+              ?.filter((news) => news.title.includes(searchText))
+              .map(serializNews)
+          )
+        );
+    }
+
     prioritis && dispatch(setPriorityNews(prioritis.map(serializNews)));
-  }, [news, dispatch, id, text]);
-  // useEffect(()=>{console.log("newsdataState ",newsDataState)},[newsDataState])
-  console.log("news Data State,",newsDataState);
+  }, [allNews, dispatch, id, searchText]);
   return (
+    <Box>
+      <Grid
+        as={OrderedList}
+        templateColumns={{ base: "1fr", md: "1fr 1fr", lg: "1fr 1fr 1fr" }}
+        sx={{
+          gap: 12,
+          listStyleType: "none",
+          padding: 0,
+          margin: 0,
+        }}
+      >
+        {newsDataState
+          .slice(
+            pageIndex * itemsPerPage,
+            pageIndex * itemsPerPage + itemsPerPage
+          )
+          .map((news, id) => (
+            <GridItem as={ListItem} key={id}>
+              <NewsListItem
+                key={news.id}
+                stateId={id}
+                news={newsFactory(news)}
+              />
+            </GridItem>
+          ))}
+      </Grid>
+      <Box mt={10} textAlign={"center"}>
+        <Flex justifyItems="center" justify="space-between">
+          <Button
+            isDisabled={pageIndex === 0}
+            onClick={() => {
+              setPageIndex(pageIndex - 1);
+            }}
+            m={2}
+            pe={5}
+            leftIcon={<FaArrowLeft />}
+          >
+            Előző
+          </Button>
+          <Box ms={5} me={5} justifyContent={"center"}>
+            {pageIndex + 1} .oldal
+          </Box>
 
-        <Grid
-
-          as={OrderedList}
-          templateColumns={{ base: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr' }}
-          sx={{
-            gap: 12,
-            listStyleType: "none",
-            padding: 0,
-            margin: 0,
-          }}
-        >
-          {newsDataState &&
-            newsDataState.map((news, id) => (
-              <GridItem as={ListItem} key={id}>
-                <NewsListItem key={news.id} stateId={id} news={newsFactory(news)} />
-              </GridItem>
-            ))}
-        </Grid>
-    
+          <Button
+            ps={5}
+            isDisabled={pageIndex + 1 === totalPages}
+            onClick={() => {
+              setPageIndex(pageIndex + 1);
+            }}
+            rightIcon={<FaArrowRight />}
+          >
+            Következő
+          </Button>
+        </Flex>
+      </Box>
+    </Box>
   );
 };

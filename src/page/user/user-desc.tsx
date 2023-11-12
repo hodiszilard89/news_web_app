@@ -10,14 +10,11 @@ import {
   GridItem,
   Image,
   Text,
-  VStack,
   HStack,
   Input,
-  Flex,
-  Icon,
-  Button
+  Button,
 } from "@chakra-ui/react";
-
+import { Footer } from "../../componens/basic-comp/footer";
 import { useFormik } from "formik";
 
 import { User } from "../../models/user";
@@ -34,11 +31,8 @@ export interface UserDescProps {
 }
 
 export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
-
-
   const reader = new FileReader();
 
- 
   const [base64Image, setBase64Image] = useState("");
   const [imgageUpload] = useUploadImageMutation();
   const [viewPass, setViewPass] = useState<Boolean>(false);
@@ -49,8 +43,6 @@ export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
     onSubmit: async (values: User) => {
       try {
         const validatedValues = { ...values };
-        // await console.log("image",image);
-        await console.log("base64IMage", base64Image);
         await imgageUpload(base64Image);
         await updateUser({ user: validatedValues, image: base64Image });
       } catch (e) {
@@ -87,11 +79,11 @@ export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
               {user?.chatName}
             </Text>
             <HStack>
-              <Text as={Link} href={user?.email} color={"blue"}>
-                {user?.email}
-              </Text>
               <Text as={"span"} textAlign={"center"}>
-                --Administrator
+                Jogosultságok:
+                {user.laws?.map((law) => (
+                  <Text key={law.id}>{law.title}</Text>
+                ))}
               </Text>
             </HStack>
           </GridItem>
@@ -232,40 +224,42 @@ export const UserDesc: FC<UserDescProps> = ({ user, onSubmit }) => {
                           ?.toString()
                           .split(",")[1];
                         setBase64Image(base64Image!);
-                        // console.log("render.result",reader.result)
                       };
-                      //  console.log("render.result",reader.result)
 
                       reader.readAsDataURL(file);
                     }
-
-                    //setImage(file)
                   }}
-
                 />
               </GridItem>
             </Grid>
           </FormControl>
         </>
 
-        <Button colorScheme='teal' variant='solid' type={"submit"} size={"lg"}>
+        <Button colorScheme="teal" variant="solid" type={"submit"} size={"lg"}>
           Küldés
         </Button>
         {user.laws?.find((law) => law.title === "ADMIN") ? (
           <>
             <Link ms={4} as={rLink} to={"/users"}>
-              <Button colorScheme='teal' variant='solid' size={"lg"}>Back to Users List</Button>
+              <Button colorScheme="teal" variant="solid" size={"lg"}>
+                Vissza a listához
+              </Button>
             </Link>
             <Link ms={4} as={rLink} to={"/"}>
-              <Button colorScheme='teal' variant='solid' size={"lg"}>Főoldal</Button>{" "}
+              <Button colorScheme="teal" variant="solid" size={"lg"}>
+                Főoldal
+              </Button>{" "}
             </Link>
           </>
         ) : (
           <Link ms={4} as={rLink} to={"/"}>
-            <Button colorScheme='teal' variant='solid' size={"lg"}>Főoldal</Button>{" "}
+            <Button colorScheme="teal" variant="solid" size={"lg"}>
+              Főoldal
+            </Button>{" "}
           </Link>
         )}
       </Box>
+      <Footer />
     </>
   );
 };

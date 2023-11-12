@@ -23,13 +23,11 @@ export const useNewsChancages = () =>{
        
             throw result.error;
           }
- 
-          //return newsFactory(result.data);
+
         },
         [updateNews, createNews]
       );
-    //update
-    //console.log(createNews);
+
      
     return{
         deleteNews,

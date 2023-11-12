@@ -8,19 +8,20 @@ export interface CommentListProps {
 export const CommentList: FC<CommentListProps> = ({ comments }) => {
   return (
     <>
-      {comments.map((comment, id) => {
+      {comments.map((comment, id) => 
        
-        return (<>
-          <MyComment
-            key={id}
-            authorImage={comment.writer && comment.writer.imagePath}
-            author={comment.writer?.chatName}
-            date={comment && comment.releasedate}
-            text={comment.text}
-          />
-          </>
-        );
-      })}
+          
+            <MyComment
+              key={comment.id ? comment.id : 0}
+              id={id}
+              authorImage={comment.writer && comment.writer.imagePath}
+              author={comment.writer?.chatName}
+              date={comment && comment.releasedate}
+              text={comment.text}
+            />
+          
+        )
+      }
     </>
   );
 };

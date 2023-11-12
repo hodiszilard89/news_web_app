@@ -162,10 +162,10 @@ export const newsApi = createApi({
         url: "/news",
         method: "POST",
         headers: {
-          "Content-Type": "text/plain; charset=utf-8",
+          "Content-Type": "application/json; charset=utf-8",
           Accept: "text/plain; charset=utf-8",
         },
-        body: JSON.stringify(news),
+        body: news,
       }),
       invalidatesTags: [{ type: newsTag, id: "LIST" }],
     }),
@@ -285,30 +285,16 @@ export const newsApi = createApi({
         url: "news/addlike",
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          accept: "text/plain; charset=utf-8",
+          "Content-Type": "application/json; charset=utf-8",
+          Accept: "application/json; charset=utf-8",
         },
 
-        body: like,
+        body: JSON.parse(JSON.stringify(like)),
       }),
 
       invalidatesTags:[{ type: userTag, id:"LIST"}, {type:newsTag, id:"LIST"}]
     }),
 
-
-    // addUser: builder.mutation<User, User>({
-    //   //első paraméter amit visszakapunk 2. amit küldünk
-    //   query: (user: User) => ({
-    //     url: "/users",
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "text/plain",
-    //       accept: "text/plain; charset=utf-8",
-    //     },
-
-    //     body: JSON.stringify(user),
-    //   }),
-    // }),
   }),
 });
 

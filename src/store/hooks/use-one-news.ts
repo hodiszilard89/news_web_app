@@ -17,13 +17,11 @@ export const useOneNews = (newsId: number) => {
        data && newsFactory(data),
     [data]);
 
-  //console.log(data);
-  //const user = data as User;
+
  
   return {
     isLoading: isLoading || (!data && isFetching),
     error,
     news
-    //news: data?? data,
   };
 };

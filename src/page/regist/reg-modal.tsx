@@ -18,9 +18,9 @@ import {
   ChakraProvider,
   FormErrorMessage,
 } from "@chakra-ui/react";
-
+import { RegValidationSchema } from "./reg-validation.schema";
 import { CheckCircleIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { showLogin, selectLogin } from "../../store/news/login-slice";
+import { showLogin} from "../../store/news/login-slice";
 import { closeReg, selectShowReg } from "../../store/news/reg-slice";
 import { useFormik } from "formik";
 
@@ -56,7 +56,7 @@ const RegModal: FC = () => {
   const { errors, values, setFieldValue, handleSubmit, setValues } = useFormik({
     initialValues: initValues,
     onSubmit: async (values, { setSubmitting }) => {
-      console.log(errors);
+
       try {
         const user = createUser();
         user.chatName = values.chatname;
@@ -74,7 +74,7 @@ const RegModal: FC = () => {
 
       dispatch(closeReg());
     },
-   // validationSchema: RegValidationSchema,
+    validationSchema: RegValidationSchema,
   });
 
   const onClose = useCallback(() => {
@@ -193,7 +193,7 @@ const RegModal: FC = () => {
                 </Box>
                
               </Box>
-              <FormControl>
+              <FormControl isInvalid={!!errors.chatname}>
                 <FormLabel>Kiválasztott chat név</FormLabel>
                 <Input
                   type="text"
@@ -204,6 +204,12 @@ const RegModal: FC = () => {
                     setFieldValue("chatname", event.target.value)
                   }
                 />
+                  {errors.chatname ? (
+                  <FormErrorMessage>{errors.chatname}</FormErrorMessage>
+                ) : (
+                  <CheckCircleIcon color={"green"} />
+                )}
+              
               </FormControl>
               <FormControl>
                 <FormLabel>Adja meg vezetéknevét</FormLabel>

@@ -1,10 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { News } from "../../models/news";
+
 import { RawNews } from "../../models/raw-news";
 import { RootState } from "../store";
-import { serializNews } from "../../utils/news_factory";
-import { User } from "../../models/user";
-import { stat } from "fs";
+
+
 
 interface NewsState {
   priority: RawNews[];
@@ -31,6 +30,7 @@ export const newsSlice = createSlice({
     setNewsTypeId: (state: NewsState, action: PayloadAction<number>) => {
       state.typeId = action.payload;
     },
+
     updateNewsItem: (
       state: NewsState,
       action: PayloadAction<{ index: number; item: RawNews }>

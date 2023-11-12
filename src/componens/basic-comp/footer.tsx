@@ -2,22 +2,17 @@ import { FC } from "react";
 import {
   Grid,
   Box,
-  Tag,
   Text,
   HStack,
   VStack,
-  Button,
   Link,
   Icon,
   GridItem,
 } from "@chakra-ui/react";
 import {
-  FaCircle,
-  FaCoffee,
   FaCopyright,
   FaFacebook,
   FaInstagram,
-  FaTwitch,
   FaTwitter,
 } from "react-icons/fa";
 export const Footer: FC = () => {
@@ -68,11 +63,13 @@ export const Footer: FC = () => {
           </GridItem>
         </Grid>
         <hr />
-  <Text display={"flex"}> <Icon marginEnd={2} as={FaCopyright}/> {new Date().getFullYear()}  Fake News</Text>
-       
-
-        
-        
+        <Text display={"flex"}>
+          {" "}
+          <Icon
+            marginEnd={2}
+            as={FaCopyright}
+          /> {new Date().getFullYear()} Fake News
+        </Text>
       </Box>
     </div>
   );

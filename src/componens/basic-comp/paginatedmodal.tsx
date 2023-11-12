@@ -1,16 +1,21 @@
 import React, { useState, FC } from "react";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from "@chakra-ui/react";
-import { boolean } from "yup";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
 
 interface PagiantedProps {
-    isOpen:boolean,
-    onClose:()=>void,
-    items:string []
+  isOpen: boolean;
+  onClose: () => void;
+  items: string[];
 }
 
-
-
-const PaginatedModal:FC<PagiantedProps> = ({ isOpen, onClose, items }) =>{
+const PaginatedModal: FC<PagiantedProps> = ({ isOpen, onClose, items }) => {
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleNextPage = () => {
@@ -38,8 +43,12 @@ const PaginatedModal:FC<PagiantedProps> = ({ isOpen, onClose, items }) =>{
             <input type="text" />
             <button type="submit">submit</button>
           </form>
-          {currentPage > 0 && <button onClick={handlePrevPage}>Previous</button>}
-          {currentPage < items.length - 1 && <button onClick={handleNextPage}>Next</button>}
+          {currentPage > 0 && (
+            <button onClick={handlePrevPage}>Previous</button>
+          )}
+          {currentPage < items.length - 1 && (
+            <button onClick={handleNextPage}>Next</button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>
