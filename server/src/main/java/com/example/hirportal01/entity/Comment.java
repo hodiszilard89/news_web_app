@@ -16,7 +16,7 @@ public class Comment {
     private Long id;
     private Date releaseDate;
     @ManyToOne
-    @JoinColumn(name = "users_id")
+    @JoinColumn(name = "users_id", referencedColumnName = "users_id")
     @JsonBackReference(value="commentWriter")
     private Users writer;
     @ManyToOne()

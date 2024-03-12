@@ -2,6 +2,7 @@ package com.example.hirportal01.controller;
 
 import com.example.hirportal01.dto.RolesDTO;
 import com.example.hirportal01.service.RolesService;
+import com.example.hirportal01.service.impl.RolesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,8 @@ import java.util.List;
 @RequestMapping(path = "/roles")
 public class RolesController {
     @Autowired
-    private final RolesService rolesService;
-    public RolesController(RolesService rolesService) {
+    private final RolesServiceImpl rolesService;
+    public RolesController(RolesServiceImpl rolesService) {
         this.rolesService = rolesService;
     }
 
