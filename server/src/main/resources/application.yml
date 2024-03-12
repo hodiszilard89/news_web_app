@@ -1,0 +1,28 @@
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/fakenews?useSSL=false&serverTimezone=UTC
+#    username: root
+#    password:
+#spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/mydatabase?useSSL=false
+#    username: root
+#    password:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL5Dialect
+#
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+jwt:
+  secret: 9e37298f54dbddab553b69e9fa6cf0b1c5961c016c4d6a03f28f51e49f31685a
+  issuer: user
+  tokenValidityInMinutes: 3500
+

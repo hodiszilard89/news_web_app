@@ -1,0 +1,18 @@
+import { connect } from "react-redux";
+import NewTodo from "../components/NewTodo";
+import { addTodo, addTodoOnServer } from "../actions/todos";
+
+function mapStateToProps(state, props) {
+  return {
+    users: state.users,
+  };
+}
+function mapDispatchToProps(dispatch, props) {
+  return {
+    onAddTodo: (item) => dispatch(addTodoOnServer(item)),
+  };
+}
+
+const NewTodoContainer = connect(mapStateToProps, mapDispatchToProps)(NewTodo);
+
+export default NewTodoContainer;
