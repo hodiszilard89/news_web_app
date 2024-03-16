@@ -15,10 +15,10 @@ export const useNewsList = (query: GetNewsQueryParams) => {
     ...query,
   }
 
-  if (searchQuery){
-    queryParams.search = searchQuery;
-    queryParams.searchBy = "titel"
-  }
+  // if (searchQuery){
+  //   queryParams.search = searchQuery;
+  //   queryParams.searchBy = "titel"
+  // }
 
   const {isLoading, isFetching, error} = useGetNewsQuery(query);
   let newsData:News[]=[];

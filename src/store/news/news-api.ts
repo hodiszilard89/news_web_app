@@ -50,15 +50,29 @@ export interface GetTokenQueryParams {
   email: string;
   password: string;
 }
+
+export interface GetyNewsByTypeParams {
+  id:number;
+  limit:number;
+  side:number;
+}
+
 export interface GetNewsQueryParams {
-  type?: Type[];
-  offset?: number;
-  sortBy?: string;
+  type?: number;
+  side?:number;
+  // offset?: number;
+  // sortBy?: string;
   // filter?:Type[];
   limit?: number;
-  id?: number;
-  search?: string;
-  searchBy?: "titel";
+  //id?: number;
+  //search?: string;
+  //searchBy?: "titel";
+}
+
+const initGetNewsQueryParams:GetNewsQueryParams ={
+  limit:12,
+  side:0,
+  type:-1
 }
 
 export const storage = window.localStorage;
@@ -100,7 +114,7 @@ export const newsApi = createApi({
       RawNews[] | undefined,
       GetNewsQueryParams | undefined
     >({
-      query: (filter: GetNewsQueryParams) => ({ url: "/news", method: "GET" }),
+      query: (filter: GetNewsQueryParams) => ({ url: "/news}", method: "GET" }),
       providesTags: (result?: RawNews[]) => {
         return result && Array.isArray(result)
           ? [
@@ -111,9 +125,9 @@ export const newsApi = createApi({
       },
     }),
 
-    getNewsByType: builder.query<News[], Type["id"]>({
-      query: (typeId: Type["id"]) => ({
-        url: `/news/type/${typeId}`,
+    getNewsByType: builder.query<News[], GetyNewsByTypeParams>({
+      query: (filter: GetyNewsByTypeParams) => ({
+        url: `/news/type/${filter.id}/${filter.limit}/${filter.side}`,
         method: "GET",
       }),
       providesTags: (result?: News[]) => {

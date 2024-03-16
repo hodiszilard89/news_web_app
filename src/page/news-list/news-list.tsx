@@ -8,7 +8,7 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
-
+import { News } from "../../models";
 import { NewsListItem } from "./news-list-item";
 import { RawNews } from "../../models";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,27 +40,28 @@ export const NewsList: FC = () => {
   const searchText = useSelector(selectSearchText);
   const idFromState = useSelector(selectTypeId);
   //const [pageIndex, setPageIndex] = useState(0)
-  const prioritis = allNews?.filter((news) => news.priority);
-
+ // const prioritis = allNews&&allNews?.filter((news) => news.priority);
+  const prioritis:News[] = [];
   useEffect(() => {
     setId(idFromState!);
+    setPageIndex(0);
   }, [idFromState]);
   useEffect(() => {
-    setPageIndex(0);
+    
     if (!searchText) {
       allNews && setNewsDataState(allNews.map(serializNews));
       allNews && dispatch(setNews(allNews.map(serializNews)));
     } else {
       allNews &&
         setNewsDataState(
-          allNews
+          allNews&&allNews
             ?.filter((news) => news.title.includes(searchText))
             .map(serializNews)
         );
       allNews &&
         dispatch(
           setNews(
-            allNews
+            allNews&&allNews
               ?.filter((news) => news.title.includes(searchText))
               .map(serializNews)
           )
