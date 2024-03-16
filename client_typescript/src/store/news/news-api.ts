@@ -49,7 +49,7 @@ export interface GetTokenQueryParams {
 }
 export interface GetNewsQueryParams {
   type?: Type[];
-  offset: number;
+  offset?: number;
   sortBy?: string;
 
   limit?: number;

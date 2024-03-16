@@ -1,5 +1,6 @@
 import { Formik } from "formik";
-import { Container, Form, Button } from "react-bootstrap";
+//import { Container, Form, Button } from "react-bootstrap";
+import {Box, FormControl, FormLabel, Input, Text, Button} from "@chakra-ui/react" 
 import { Link } from "react-router-dom";
 
 export const RegisterPage = () => {
@@ -8,45 +9,45 @@ export const RegisterPage = () => {
   };
 
   return (
-    <Container className="mt-5">
+    <Box>
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={handleSubmit}
       >
         {({ values, handleChange, handleSubmit }) => (
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
+          <FormControl>
+           
+              <FormLabel>Email address</FormLabel>
+              <Input
                 type="email"
                 placeholder="Enter email"
                 name="email"
                 value={values.email}
                 onChange={handleChange}
               />
-            </Form.Group>
+         
 
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
+           
+              <FormLabel>Password</FormLabel>
+              <Input
                 type="password"
                 placeholder="Password"
                 name="password"
                 value={values.password}
                 onChange={handleChange}
               />
-            </Form.Group>
+          
 
             <Button variant="primary" type="submit">
               Register
             </Button>
 
-            <Form.Text className="ml-3">
+            <Text>
               Already have an account? <Link to="/login">Login here</Link>
-            </Form.Text>
-          </Form>
+            </Text>
+          </FormControl>
         )}
       </Formik>
-    </Container>
+    </Box>
   );
 };

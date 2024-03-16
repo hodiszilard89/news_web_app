@@ -1,24 +1,24 @@
 import React, { FC } from "react";
 import { Box, Flex } from "@chakra-ui/react";
-import { MyCarousel } from "../alap-comp/my-carousel";
-import { Container } from "react-bootstrap";
+
+import MyCarousel from "../basic-comp/new-carousel";
 
 import { News } from "../../models/news";
 import { NewsList } from "./news-list/news-list";
 
-import MyNavbar from "../alap-comp/navbar";
+import {NewNavbar} from "../basic-comp/navbar/new-navbar";
 //import { PageFooter } from "./page-footer";
 
 export const HomePage: FC = () => {
   return (
-    <Container>
+    <Box>
       <Flex marginX="auto" maxWidth="7xl" flexDir="column" height="full">
         <Box flexGrow={1}>
-          <MyNavbar />
-          <MyCarousel />
+          <NewNavbar />
+          <MyCarousel news={[]}/>
           <NewsList news={[]} />
         </Box>
       </Flex>
-    </Container>
+    </Box>
   );
 };
