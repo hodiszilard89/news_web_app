@@ -1,10 +1,19 @@
 # Válassza le az Alpine Linux alapú képet
-FROM openjdk:17
-ADD target/hirportal-0.1.jar
-ENTRYPOINT ["java", "-jar", "/hirportal-0.1.jar"]
+
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y openjdk-17-jre
+COPY server_entrypoint.sh /opt/server_entrypoint.sh
+
+#WORKDIR /
+ADD target/hirportal-0.0.1.jar app.jar
+ENTRYPOINT /opt/server_entrypoint.sh
+CMD ["java", "-jar", "app.jar"]
+#RUN apk-get add --no-cache netcat-openbsd;  apk add --no-cache net-tools;
+#ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 ## Állítsa be a munkakönyvtárat
-#WORKDIR /app
+#WORKDIR /appdocker
+
 #
 ## Telepítse a szükséges csomagokat (OpenJDK, fontosabb eszközök)
 ##RUN apk add --no-cache openjdk11-jre

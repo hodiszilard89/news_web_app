@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/news")
 public class NewsController {
 
@@ -42,6 +43,7 @@ public class NewsController {
         newsService.addComment(commentDTO);
         return  ResponseEntity.ok(null);
     }
+
 
     @RequestMapping(path = "/gettypes" , method = RequestMethod.GET)
     public ResponseEntity<List<TypeOfNewsDTO>> getAllType(){

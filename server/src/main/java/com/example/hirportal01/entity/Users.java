@@ -12,7 +12,6 @@ public class Users implements UserDetails  {
     private Boolean locked;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="users_id")
     private Long id;
    // private Date birthDay;
 
