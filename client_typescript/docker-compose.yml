@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  database:
+    image: mysql_db
+    container_name: database
+    networks:
+      mynetwork:
+        ipv4_address: 172.19.0.2
+
+    ports:
+      - "3306:3306"
+
+  server:
+    image: webapp_image
+    container_name: server
+    networks:
+      mynetwork:
+        ipv4_address: 172.19.0.3
+    depends_on:
+      - database
+    ports:
+      - "8080:8080"
+    environment:
+      - MYSQL_HOST=172.18.0.2
+    # healthcheck:
+    #     test: ["CMD-SHELL", " netstat -an | grep -q 8080"]
+
+  frontend:
+    image: alpine_image
+    container_name: frontend
+    networks:
+      mynetwork:
+        ipv4_address: 172.19.0.4
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"
+    environment:
+     - SERVERHOST=172.18.0.2
+     
+
+networks:
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 172.18.0.0/16
+    mynetwork:
+      #external: true
+      
+      ipam:
+        driver: default
+        config:
+          - subnet: 172.19.0.0/16
+  # mynetwork: 
+  #   external: true
+

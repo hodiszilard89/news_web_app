@@ -18,6 +18,7 @@ import PaginatedModal from "./componens/basic-comp/paginatedmodal";
 
 export const App = () => {
 
+
   return (
     <React.StrictMode>
       <BrowserRouter>

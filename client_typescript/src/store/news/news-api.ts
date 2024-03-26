@@ -1,3 +1,4 @@
+
 import {
   FetchArgs,
   FetchBaseQueryError,
@@ -70,6 +71,7 @@ export interface ResponseForNewsQuery{
 }
  
 export const storage = window.localStorage;
+const SERVERHOST = "172.19.0.3";
 const newsTag: string = "NEWS";
 const userTag: string = "USER";
 const commentTag: string = "COMMENT";
@@ -91,7 +93,7 @@ export const newsApi = createApi({
   endpoints: (builder) => ({
     getToken: builder.query<Token, GetTokenQueryParams>({
       query: (params: GetTokenQueryParams) => ({
-        url: "/authentication",
+        url: `http://${SERVERHOST}:8080/authentication`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +120,7 @@ export const newsApi = createApi({
 
     getNewsByType: builder.query<ResponseForNewsQuery, GetRequestParamsForNewsQuery>({
       query: (params: GetRequestParamsForNewsQuery) => ({
-        url: `/news/type/${params.typeId}/${params.limit}/${params.side}`,
+        url: `http://${SERVERHOST}:8080/news/type/${params.typeId}/${params.limit}/${params.side}`,
         method: "GET",
       }),
       providesTags: (result?: ResponseForNewsQuery) => {
@@ -156,13 +158,14 @@ export const newsApi = createApi({
     }),
     getTypes: builder.query<Type[], void>({
       query: () => ({
-        url: `/news/gettypes`,
+        url: `http://${SERVERHOST}:8080/news/gettypes`,
+        method: "GET",
       }),
       //providesTags: (_result, _error, id) => ([{ type: MovieTag, id }]),
     }),
     createNews: builder.mutation<RawNews, RawNews>({
       query: (news: RawNews) => ({
-        url: "/news",
+        url: `http://${SERVERHOST}:8080/news`,
         method: "POST",
         headers: {
           "Content-Type": "application/json; charset=utf-8",

@@ -10,6 +10,7 @@ import {NewNavbar} from "../basic-comp/navbar/new-navbar";
 //import { PageFooter } from "./page-footer";
 
 export const HomePage: FC = () => {
+ 
   return (
     <Box>
       <Flex marginX="auto" maxWidth="7xl" flexDir="column" height="full">
