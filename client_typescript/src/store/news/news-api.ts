@@ -71,7 +71,7 @@ export interface ResponseForNewsQuery{
 }
  
 export const storage = window.localStorage;
-const SERVERHOST = "172.19.0.3";
+const SERVERHOST = "localhost";
 const newsTag: string = "NEWS";
 const userTag: string = "USER";
 const commentTag: string = "COMMENT";

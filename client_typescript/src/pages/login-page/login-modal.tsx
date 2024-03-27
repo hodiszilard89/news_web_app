@@ -51,25 +51,23 @@ const LoginModal: FC = () => {
 
   const auth = useAuthUser();
   const authUserInStorage = auth();
-
+  console.log(authUserInStorage);
   const [authUser, setMyAuthUser] = useState<User>();
+
 
   const { isLoading: Loading, data } = useGetUser(authUserInStorage?.id);
 
   useEffect(() => {
     setMyAuthUser(data);
-
-    // dispach(setNews(news));
+    console.log("data :",data?.chatName)
 
     dispatch(setUser(data));
-  }, [data]);
+  }, [data, dispatch] );
 
   const { serverErrors, isLoading, isFetching, tokenValue } =
     useGetToken(tokenParams);
   const [error, setError] = useState(serverErrors?.data.messages)
-  // const { serverErrors, isLoading, isFetching, tokenValue } = tokenParams
-  // ? useGetToken(tokenParams)
-  // : { serverErrors: null, isLoading: false, isFetching: false, tokenValue: null };
+
 
   
   useEffect(() => {

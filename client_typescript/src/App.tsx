@@ -4,16 +4,16 @@ import * as React from "react";
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 
-import { HomePage } from "./page/home-page";
+import { HomePage } from "./pages/home-page";
 
-import { NewsDescProvider } from "./page/singlenews/news-desc-provider";
-import { NewsEditorProvider } from "./page/edit-news/news-editor-provides";
+import { NewsDescProvider } from "./pages/singlenews/news-desc-provider";
+import { NewsEditorProvider } from "./pages/edit-news-page/news-editor-provides";
 
-import { UsersList } from "./page/users-list/users-list";
-import { LoginProvider } from "./page/login/login-provider";
+import { UsersList } from "./pages/users-list/users-list";
+import { LoginProvider } from "./pages/login-page/login-provider";
 
-import RegModal from "./page/regist/reg-modal";
-import { UserDescProvides } from "./page/user/user-desc-provides";
+import RegModal from "./pages/regist/reg-modal";
+import { UserDescProvides } from "./pages/user/user-desc-provides";
 import PaginatedModal from "./componens/basic-comp/paginatedmodal";
 
 export const App = () => {

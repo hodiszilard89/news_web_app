@@ -13,9 +13,6 @@ class LoginForm {
   }
 
   public initialize() {
-    // this.submitButton = this.form.querySelector(
-    //   "button[type='submit']"
-    // ) as HTMLButtonElement;
 
     this.form.addEventListener("submit", async (event: SubmitEvent) => {
       event.preventDefault();
